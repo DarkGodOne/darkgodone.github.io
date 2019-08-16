@@ -30,16 +30,17 @@ const siteConfig = {
   //   baseUrl: '/test-site/',
 
   // Used for publishing and more
-  projectName: 'DarkGod’ Blog',
+  projectName: 'darkgodone.github.io',
   organizationName: 'DarkGod',
+  customDocsPath: 'website/docs',
   // For top-level user or org sites, the organization is still the same.
   // e.g., for the https://JoelMarcey.github.io site, it would be set like...
   //   organizationName: 'JoelMarcey'
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {URL: 'doc1', label: '中文Kafka'},
-    {url: 'doc4', label: '中文dep'},
+    {href: 'https://github.darkgod.online/kafka', label: '中文Kafka'},
+    {href: 'https://github.darkgod.online/dep', label: '中文dep'},
     {page: 'help', label: 'openwrt'},
     {blog: true, label: 'Blog'},
   ],

@@ -41,17 +41,20 @@ const siteConfig = {
   headerLinks: [
     {href: 'https://github.darkgod.online/kafka', label: '中文Kafka'},
     {href: 'https://github.darkgod.online/dep', label: '中文dep'},
-    {page: 'help', label: 'openwrt'},
+    {doc: 'openwrt/domestic', label: 'Openwrt'},
     {blog: true, label: 'Blog'},
   ],
+
+  blogSidebarCount: 10,
+  blogSidebarTitle: { default: '最近发布', all: '所有发布的博客' },
 
   // If you have users set above, you add it here:
   users,
 
   /* path to images for header/footer */
-  headerIcon: 'img/favicon.ico',
-  footerIcon: 'img/favicon.ico',
-  favicon: 'img/favicon.ico',
+  headerIcon: 'img/favicon.svg',
+  footerIcon: 'img/favicon.svg',
+  favicon: 'img/favicon.svg',
 
   /* Colors for website */
   colors: {

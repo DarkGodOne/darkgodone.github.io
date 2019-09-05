@@ -2,8 +2,9 @@
   "docs": {
     "Openwrt": [
       "openwrt/domestic",
-      "openwrt/local"
+      "openwrt/local",
+      "openwrt/extend"
     ],
-    "git": ["doc2"]
+    "Git": ["git/ssh"]
   }
 }

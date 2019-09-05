@@ -41,8 +41,8 @@ const siteConfig = {
   headerLinks: [
     {href: 'https://github.darkgod.online/kafka', label: '中文Kafka'},
     {href: 'https://github.darkgod.online/dep', label: '中文dep'},
-    {doc: 'openwrt/domestic', label: 'Openwrt'},
-    {blog: true, label: 'Blog'},
+    {doc: 'openwrt/domestic', label: '知识'},
+    //{blog: true, label: 'Blog'},
   ],
 
   blogSidebarCount: 10,

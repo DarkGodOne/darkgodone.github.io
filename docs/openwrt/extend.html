@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Openwrt 扩展根分区 · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="由于项目需要，用了个x86的工控机安装openwrt系统，但是发现刷了系统后磁盘没有全部使用，感觉很浪费，最终找到了openwrt扩展根分区的方法"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Openwrt 扩展根分区 · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="由于项目需要，用了个x86的工控机安装openwrt系统，但是发现刷了系统后磁盘没有全部使用，感觉很浪费，最终找到了openwrt扩展根分区的方法"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Openwrt</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Openwrt 扩展根分区</h1></header><article><div><span><p>由于项目需要，用了个x86的工控机安装openwrt系统，但是发现刷了系统后磁盘没有全部使用，感觉很浪费，最终找到了openwrt扩展根分区的方法</p>
+<h2><a class="anchor" aria-hidden="true" id="第一步-安装软件"></a><a href="#第一步-安装软件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第一步：安装软件</h2>
+<p>用fdisk对openwrt分区，但是貌似有人说这个分区最大只支持4G以下，超过4G就无法分区了，最终发现cfdisk是可以的，所以用了cfdisk进行磁盘扩展</p>
+<pre><code class="hljs">opkg <span class="hljs-keyword">install</span> fdisk
+opkg <span class="hljs-keyword">install</span> cfdisk
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="第二步-查找根分区"></a><a href="#第二步-查找根分区" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第二步：查找根分区</h2>
+<p>使用命令查找根分区,通过df命令和fdisk命令可以判断根分区为sda2</p>
+<pre><code class="hljs"><span class="hljs-symbol">root@</span>OpenWrt:~# df -h
+Filesystem                Size      Used Available Use% Mounted on
+/dev/root                 <span class="hljs-number">5.8</span>M      <span class="hljs-number">5.8</span>M         <span class="hljs-number">0</span> <span class="hljs-number">100</span>% /rom
+tmpfs                     <span class="hljs-number">1.9</span>G    <span class="hljs-number">912.0</span>K      <span class="hljs-number">1.9</span>G   <span class="hljs-number">0</span>% /tmp
+/dev/loop0              <span class="hljs-number">111.8</span>G      <span class="hljs-number">2.2</span>G    <span class="hljs-number">109.6</span>G   <span class="hljs-number">2</span>% /overlay
+overlayfs:/overlay      <span class="hljs-number">111.8</span>G      <span class="hljs-number">2.2</span>G    <span class="hljs-number">109.6</span>G   <span class="hljs-number">2</span>% /
+/dev/sda1                <span class="hljs-number">15.7</span>M      <span class="hljs-number">4.2</span>M     <span class="hljs-number">11.2</span>M  <span class="hljs-number">27</span>% /boot
+/dev/sda1                <span class="hljs-number">15.7</span>M      <span class="hljs-number">4.2</span>M     <span class="hljs-number">11.2</span>M  <span class="hljs-number">27</span>% /boot
+tmpfs                   <span class="hljs-number">512.0</span>K         <span class="hljs-number">0</span>    <span class="hljs-number">512.0</span>K   <span class="hljs-number">0</span>% /dev
+
+<span class="hljs-symbol">root@</span>OpenWrt:~# fdisk -l
+Disk /dev/loop0: <span class="hljs-number">111.8</span> GiB, <span class="hljs-number">120010399744</span> bytes, <span class="hljs-number">234395312</span> sectors
+Units: sectors of <span class="hljs-number">1</span> * <span class="hljs-number">512</span> = <span class="hljs-number">512</span> bytes
+Sector size (logical/physical): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+I/O size (minimum/optimal): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+
+Disk /dev/sda: <span class="hljs-number">111.8</span> GiB, <span class="hljs-number">120034123776</span> bytes, <span class="hljs-number">234441648</span> sectors
+Units: sectors of <span class="hljs-number">1</span> * <span class="hljs-number">512</span> = <span class="hljs-number">512</span> bytes
+Sector size (logical/physical): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+I/O size (minimum/optimal): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+Disklabel type: dos
+Disk identifier: <span class="hljs-number">0x511541b3</span>
+
+Device     Boot Start       End   Sectors   Size Id Type
+/dev/sda1  *      <span class="hljs-number">512</span>     <span class="hljs-number">33279</span>     <span class="hljs-number">32768</span>    <span class="hljs-number">16</span>M <span class="hljs-number">83</span> Linux
+/dev/sda2  *    <span class="hljs-number">33792</span> <span class="hljs-number">234440623</span> <span class="hljs-number">234406832</span> <span class="hljs-number">111.8</span>G <span class="hljs-number">83</span> Linux
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="第三步-扩展根分区"></a><a href="#第三步-扩展根分区" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第三步：扩展根分区</h2>
+<p>执行cfdisk命令，可以进入分区配置界面
+<img src="/docs/assets/disk.png" alt="disk"></p>
+<p>上下键然后选择sda2,左右键选择Resize，在New Size的地方输入想要扩展的大小，回车确认后再左右键选择Write即可完成分区扩展
+<img src="/docs/assets/diskover.png" alt="diskover"></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/openwrt/local"><span class="arrow-prev">← </span><span>Openwrt 本地源配置</span></a><a class="docs-next button" href="/docs/git/ssh"><span>Git 配置SSH方式</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#第一步-安装软件">第一步：安装软件</a></li><li><a href="#第二步-查找根分区">第二步：查找根分区</a></li><li><a href="#第三步-扩展根分区">第三步：扩展根分区</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/doc1.html">Getting Started (or other categories)</a><a href="/docs/en/doc2.html">Guides (or other categories)</a><a href="/docs/en/doc3.html">API Reference (or other categories)</a></div><div><h5>Community</h5><a href="/en/users.html">User Showcase</a><a href="https://stackoverflow.com/questions/tagged/" target="_blank" rel="noreferrer noopener">Stack Overflow</a><a href="https://discordapp.com/">Project Chat</a><a href="https://twitter.com/" target="_blank" rel="noreferrer noopener">Twitter</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2019 Your Name or Your Company Name</section></footer></div></body></html>

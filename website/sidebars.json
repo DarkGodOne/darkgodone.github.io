@@ -5,6 +5,7 @@
       "openwrt/local",
       "openwrt/extend"
     ],
-    "Git": ["git/ssh"]
+    "Git": ["git/ssh"],
+    "VPN": ["vpn/vpn"]
   }
 }

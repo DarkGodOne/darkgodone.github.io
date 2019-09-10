@@ -41,8 +41,9 @@ const siteConfig = {
   headerLinks: [
     {href: 'https://github.darkgod.online/kafka', label: '中文Kafka'},
     {href: 'https://github.darkgod.online/dep', label: '中文dep'},
-    {doc: 'openwrt/domestic', label: '知识'},
-    //{blog: true, label: 'Blog'},
+    {doc: 'openwrt/domestic', label: '知识宝库'},
+    {blog: true, label: 'Blog'},
+    { search: true }
   ],
 
   blogSidebarCount: 10,
@@ -77,7 +78,7 @@ const siteConfig = {
   */
 
   // This copyright info is used in /core/Footer.js and blog RSS/Atom feeds.
-  copyright: `Copyright © ${new Date().getFullYear()} Your Name or Your Company Name`,
+  copyright: `Copyright © ${new Date().getFullYear()} DarkGod`,
 
   highlight: {
     // Highlight.js theme to use for syntax highlighting in code blocks.

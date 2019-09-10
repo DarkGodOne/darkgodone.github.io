@@ -4,7 +4,6 @@ title: Git 配置SSH方式
 sidebar_label: Git 配置SSH方式
 ---
 
-## 第一步：生成SSH Keys
 1. 打开TortoiseGit下的PuttyGen;
 
 ![PuttyGen](assets/puttygen.png)

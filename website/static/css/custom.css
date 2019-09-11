@@ -14,3 +14,21 @@
 
 @media only screen and (min-width: 1500px) {
 }
+
+img {
+  max-height: 300px;
+}
+
+article p img {
+    margin-left: 0;
+}
+
+a {
+    color: #0000ff;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff0000;
+    text-decoration: none;
+}

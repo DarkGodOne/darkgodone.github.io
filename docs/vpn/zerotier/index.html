@@ -1,0 +1,199 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>简单好用的点对点私网穿越工具：Zerotier-one · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="ZeroTier将整个世界转换为一个单一的数据中心或云区域。将所有设备、虚拟机和应用程序联网，就像它们都插在同一个交换机上一样。而且这个工具安装、部署、配置都超级简单，不需要太多操作即可完成组网。甚至都不要你自己搭建公网服务器（如果需要提高网络速度，还是建议搭建一个moon服务器）。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="简单好用的点对点私网穿越工具：Zerotier-one · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="ZeroTier将整个世界转换为一个单一的数据中心或云区域。将所有设备、虚拟机和应用程序联网，就像它们都插在同一个交换机上一样。而且这个工具安装、部署、配置都超级简单，不需要太多操作即可完成组网。甚至都不要你自己搭建公网服务器（如果需要提高网络速度，还是建议搭建一个moon服务器）。"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>VPN</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">简单好用的点对点私网穿越工具：Zerotier-one</h1></header><article><div><span><p>ZeroTier将整个世界转换为一个单一的数据中心或云区域。将所有设备、虚拟机和应用程序联网，就像它们都插在同一个交换机上一样。而且这个工具安装、部署、配置都超级简单，不需要太多操作即可完成组网。甚至都不要你自己搭建公网服务器（如果需要提高网络速度，还是建议搭建一个moon服务器）。</p>
+<h2><a class="anchor" aria-hidden="true" id="注册"></a><a href="#注册" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>注册</h2>
+<p>登录<a href="https://www.zerotier.com/">官网</a>,点击登录
+<img src="/docs/assets/vpn/zerotierpages.png" alt="zerotierpages"></p>
+<p>继续点击登录进入zerotier
+<img src="/docs/assets/vpn/zerotierpages2.png" alt="zerotierpages2"></p>
+<p>注册按钮在这里
+<img src="/docs/assets/vpn/zerotierpages3.png" alt="zerotierpages3"></p>
+<p>填入邮箱和密码点击注册即可，稍后会发送验证码到邮箱内
+<img src="/docs/assets/vpn/register.png" alt="register"></p>
+<p>收到邮件后，点击邮件内的连接即可完成注册
+<img src="/docs/assets/vpn/email.png" alt="email"></p>
+<p>登录后就可以看到自己的管理页面了，这个页面只需要关注两个点</p>
+<ol>
+<li>自己得到的内部ID，基本用不上，知道有这个东西就行</li>
+<li>选择服务版本，免费版本支持100个设备完全够用
+<img src="/docs/assets/vpn/account.png" alt="account"></li>
+</ol>
+<h2><a class="anchor" aria-hidden="true" id="创建网络"></a><a href="#创建网络" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>创建网络</h2>
+<p>点击菜单项中的网络
+<img src="/docs/assets/vpn/networks.png" alt="network"></p>
+<p>点击创建网络按钮即可创建属于你的网络
+<img src="/docs/assets/vpn/createnetwork.png" alt="createnetwork"></p>
+<p>右侧可以看到创建的网络id，然后点击进入网络配置页面，网络id很重要，设备加入时会用到
+<img src="/docs/assets/vpn/networkid.png" alt="networkid"></p>
+<p>新创建的网络成员是空的，后续添加后这里会显示网络成员的状态
+<img src="/docs/assets/vpn/membernull.png" alt="membernull"></p>
+<h2><a class="anchor" aria-hidden="true" id="安装客户端"></a><a href="#安装客户端" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装客户端</h2>
+<h3><a class="anchor" aria-hidden="true" id="windows"></a><a href="#windows" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>windows</h3>
+<p>回到官网，点击菜单中的下载按钮，进入下载页（控制台页面的下载地址可能有问题，不能用了），<a href="https://www.zerotier.com/download/">传送门</a>
+<img src="/docs/assets/vpn/download.png" alt="download"></p>
+<p>在这里可以找到所有平台的下载地址，我们要用的是windows，直接下载安装包即可
+<img src="/docs/assets/vpn/downloadwindows.png" alt="downloadwindows"></p>
+<p>双击安装包，无脑下一步即可完成安装，安装完成以后，可以在开始菜单找到启动程序
+<img src="/docs/assets/vpn/application.png" alt="application"></p>
+<p>启动程序后，右下角会出现托盘程序，右键选择加入网络
+<img src="/docs/assets/vpn/joinnetwork.png" alt="joinnetwork"></p>
+<p>输入之前创建的网络ID点击加入
+<img src="/docs/assets/vpn/joinnetwork2.png" alt="joinnetwork2"></p>
+<h3><a class="anchor" aria-hidden="true" id="linux"></a><a href="#linux" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>linux</h3>
+<p>我用的是centos7，在linux下安装有两种方法</p>
+<ol>
+<li>命令行安装，即可完成安装</li>
+</ol>
+<pre><code class="hljs">curl -s <span class="hljs-string">https:</span><span class="hljs-comment">//install.zerotier.com | sudo bash</span>
+</code></pre>
+<ol start="2">
+<li>源码安装</li>
+</ol>
+<pre><code class="hljs">在官方git上下载源码,并解压
+wget http<span class="hljs-variable">s:</span>//github.<span class="hljs-keyword">com</span>/zerotier/ZeroTierOne/archive/<span class="hljs-number">1.4</span>.<span class="hljs-number">6</span>.tar.gz
+tar xvzf <span class="hljs-number">1.4</span>.<span class="hljs-number">6</span>.tar.gz
+
+进入目录中直接<span class="hljs-keyword">make</span>以及<span class="hljs-keyword">make</span> install即可
+<span class="hljs-keyword">cd</span> ZeroTierOne-<span class="hljs-number">1.4</span>.<span class="hljs-number">6</span>
+<span class="hljs-keyword">make</span>
+<span class="hljs-keyword">make</span> install
+</code></pre>
+<p>设置后台启动</p>
+<pre><code class="hljs">systemctl enable zerotier-<span class="hljs-literal">one</span>
+systemctl <span class="hljs-built_in">start</span> zerotier-<span class="hljs-literal">one</span>
+
+树莓派上
+zerotier-<span class="hljs-literal">one</span> -d
+然后把这个命令加到/etc/rc.<span class="hljs-built_in">local</span>里面即可开机自动启动
+</code></pre>
+<p>加入指定网络，将&quot;网络id&quot;替换为你的网络id即可</p>
+<pre><code class="hljs">zerotier-cli join 网络<span class="hljs-built_in">id</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="配置允许连接"></a><a href="#配置允许连接" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置允许连接</h2>
+<p>此时打开控制台web或者直接点击托盘程序右键菜单中的Zerotier Central按钮进入控制中心，此时成员列表中就出现了我们的电脑
+<img src="/docs/assets/vpn/joinmember.png" alt="joinmember"></p>
+<p>但是此时该设备还没有启用，前面还是虚线，我们需要点击设备列表前面的复选框启用该设备才算完成，启用后可以看到设备分配的ip地址以及在线状态，还可以添加设备备注用于区分多个设备
+<img src="/docs/assets/vpn/joinmember2.png" alt="joinmember2"></p>
+<h2><a class="anchor" aria-hidden="true" id="测试是否成功"></a><a href="#测试是否成功" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>测试是否成功</h2>
+<p>由于网络中最少需要两个设备才可以，这里我已经有了一个网络
+<img src="/docs/assets/vpn/memberfull.png" alt="memberfull"></p>
+<p>我们来做一下测试
+<img src="/docs/assets/vpn/ping.png" alt="ping"></p>
+<p>甚至可以连VNC哦，速度也不错
+<img src="/docs/assets/vpn/vnc.png" alt="vnc"></p>
+<h2><a class="anchor" aria-hidden="true" id="加速节点zerotier-moon部署"></a><a href="#加速节点zerotier-moon部署" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>加速节点zerotier moon部署</h2>
+<p>由于zerotier的官方服务器都在国外，墙内的子民表示连接会出现卡顿以及高演示的情况，但是官方提供部署moon节点的方式可以优化网络环境，下面我们就来搞一下。说明一下，moon的搭建是为了补充根节点在国外,速度慢, 且不稳定的一个方案,它并不能替代官方服务器单独运行。</p>
+<ol>
+<li>在公网服务器上安装zerotier</li>
+</ol>
+<pre><code class="hljs"> curl -s <span class="hljs-string">https:</span><span class="hljs-comment">//install.zerotier.com/ | sudo bash</span>
+</code></pre>
+<ol start="2">
+<li>生成moon配置文件</li>
+</ol>
+<pre><code class="hljs">cd /var/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">zerotier</span>-<span class="hljs-title">one</span>  <span class="hljs-comment">#安装好zerotier后,自动会安装到此目录</span></span>
+
+sudo zerotier-idtool initmoon identity.public &gt; moon.json         <span class="hljs-comment">#该命令将id文件转换为能用于配置的json</span>
+</code></pre>
+<ol start="3">
+<li>修改配置文件moon.json中的stableEndpoints，需要将其修改为公网ip，9993为默认端口</li>
+</ol>
+<pre><code class="hljs"><span class="hljs-string">"stableEndpoints"</span>: [ <span class="hljs-string">"23.23.23.23/9993"</span> ]
+
+注：<span class="hljs-number">23.23</span><span class="hljs-number">.23</span><span class="hljs-number">.23</span>一定要是公网ip，一定要配置正确,Zerotier依靠此配置去连接moon.
+后面的端口若没有改变则默认都是<span class="hljs-number">9993</span>端口, 此处在防火墙上需要开放<span class="hljs-number">9993</span>端口,否则是连接不上Moon的.
+</code></pre>
+<p><strong>该配置里面,有一个id字段,10个字符,如: [&quot;id&quot;: &quot;18fasd2319&quot;],  就是moon的id, 在客户端连接时,需要用到它.</strong></p>
+<ol start="4">
+<li>生成moon文件</li>
+</ol>
+<pre><code class="hljs">sudo zerotier-idtool genmoon moon<span class="hljs-selector-class">.json</span> 
+</code></pre>
+<p>执行该命令后,会在在/var/lib/zerotier-one目录下生成一个类似00000018fasd2319.moon的文件..这个文件非常重要,所有的客户端要连接上moon都是依靠该文件关联的.</p>
+<ol start="5">
+<li>使moon配置生效
+在/var/lib/zerotier-one目录下,新建一个 moons.d 文件夹，并将刚生成的moon配置文件放到该文件夹下</li>
+</ol>
+<pre><code class="hljs">mv <span class="hljs-number">000000</span>xxxxxxxxxx<span class="hljs-selector-class">.moon</span> moons.d/
+</code></pre>
+<ol start="6">
+<li>重新启动moon服务器</li>
+</ol>
+<pre><code class="hljs"><span class="hljs-attribute">systemctl restart zerotier-one</span>
+</code></pre>
+<p>经过以上配置,服务器上的moon即配置并应用完闭.</p>
+<ol start="7">
+<li>客户端安装</li>
+</ol>
+<p><strong>方法一</strong></p>
+<p>在zerotier安装目录中新建moods.d目录，并将之前生成的000000xxxxxx.moon文件拷贝进去，重启服务即可。</p>
+<pre><code class="hljs">linux路径：/var/<span class="hljs-class"><span class="hljs-keyword">lib</span>/<span class="hljs-title">zerotier</span>-<span class="hljs-title">one</span>/</span>
+windows路径: <span class="hljs-symbol">C:</span>\ProgramData\ZeroTier\One
+</code></pre>
+<p><strong>方法二</strong></p>
+<p>只需执行此命令即可,<strong>此处需要输入两遍id</strong>:</p>
+<pre><code class="hljs">zerotier-cli orbit <span class="hljs-number">18f</span>asd2319 <span class="hljs-number">18f</span>asd2319
+</code></pre>
+<ol start="8">
+<li>验证moon是否成功</li>
+</ol>
+<pre><code class="hljs">只需要执行命令：
+zerotier-<span class="hljs-keyword">cli</span> listpeers
+</code></pre>
+<p>在打印内容中如果有我们配置的网络id即可
+<img src="/docs/assets/vpn/moon.png" alt="moon"></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/vpn/vpn"><span class="arrow-prev">← </span><span class="function-name-prevnext">Centos7上使用StrongSwan部署IPSecVPN</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#注册">注册</a></li><li><a href="#创建网络">创建网络</a></li><li><a href="#安装客户端">安装客户端</a><ul class="toc-headings"><li><a href="#windows">windows</a></li><li><a href="#linux">linux</a></li></ul></li><li><a href="#配置允许连接">配置允许连接</a></li><li><a href="#测试是否成功">测试是否成功</a></li><li><a href="#加速节点zerotier-moon部署">加速节点zerotier moon部署</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

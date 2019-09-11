@@ -6,6 +6,6 @@
       "openwrt/extend"
     ],
     "Git": ["git/ssh"],
-    "VPN": ["vpn/vpn"]
+    "VPN": ["vpn/vpn","vpn/zerotier"]
   }
 }

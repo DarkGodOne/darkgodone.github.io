@@ -1,0 +1,176 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客 · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 第一步:安装php"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客 · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="## 第一步:安装php"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>WebServer</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="第一步-安装php"></a><a href="#第一步-安装php" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第一步:安装php</h2>
+<p>由于wordpress要求php最低版本为5.6.20以上，而Centos7默认yum安装的是5.4版本，所以只能通过源码安装：</p>
+<h3><a class="anchor" aria-hidden="true" id="首先安装依赖包"></a><a href="#首先安装依赖包" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>首先安装依赖包</h3>
+<pre><code class="hljs">yum  <span class="hljs-keyword">install </span> -y  epel-release
+yum <span class="hljs-keyword">install </span>openssl openssl-devel libxml2-devel libxml2 <span class="hljs-keyword">bzip2 </span><span class="hljs-keyword">bzip2-devel </span>curl-devel php-mcrypt libmcrypt libmcrypt-devel readline-devel
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="然后安装php"></a><a href="#然后安装php" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>然后安装php</h3>
+<pre><code class="hljs"><span class="hljs-number">1.</span> rpm -ivh http://rpms.famillecollet.<span class="hljs-keyword">com</span>/enterprise/<span class="hljs-comment">remi-release-7.rpm</span>
+<span class="hljs-number">2.</span> yum install -y --enablerepo=<span class="hljs-comment">remi --enablerepo=remi-php56 php php-opcache php-devel php-mbstring php-mcrypt php-mysqlnd php-phpunit-PHPUnit php-pecl-xdebug php-pecl-xhprof php-fpm php-bcmath</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="测试php版本"></a><a href="#测试php版本" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>测试php版本</h3>
+<pre><code class="hljs"><span class="hljs-attribute">php -v</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="修改-etc-php-fpmconf"></a><a href="#修改-etc-php-fpmconf" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>修改/etc/php-fpm.conf</h3>
+<p>user = lighttpd
+group = lighttpd</p>
+<h3><a class="anchor" aria-hidden="true" id="启动php-fpm"></a><a href="#启动php-fpm" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>启动php-fpm</h3>
+<p>systemctl start php-fpm.service
+systemctl enable php-fpm.service</p>
+<h2><a class="anchor" aria-hidden="true" id="第二步-安装lighttpd"></a><a href="#第二步-安装lighttpd" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第二步：安装lighttpd</h2>
+<pre><code class="hljs">yum  <span class="hljs-keyword">install</span>  -y  epel-<span class="hljs-keyword">release</span>
+yum <span class="hljs-keyword">install</span> lighttpd
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="配置lighttpd"></a><a href="#配置lighttpd" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置lighttpd</h3>
+<ol>
+<li>编辑 modules.conf文件修改路径到wordpress位置，关闭ipv6,去掉&quot;mod_auth&quot;前的#号和 include &quot;conf.d/status.conf&quot;前的#号,去掉include &quot;conf.d/fastcgi.conf前的#号</li>
+</ol>
+<pre><code class="hljs">var.server_root = <span class="hljs-string">"/var/www/wordpress"</span>
+server.use-ipv6 = <span class="hljs-string">"disable"</span>
+server.document-root = server_root
+
+index-file.names += (
+  <span class="hljs-string">"index.php"</span>,<span class="hljs-string">"index.xhtml"</span>, <span class="hljs-string">"index.html"</span>, <span class="hljs-string">"index.htm"</span>, <span class="hljs-string">"default.htm"</span>
+)
+
+server.modules = (
+  <span class="hljs-string">"mod_access"</span>,
+<span class="hljs-meta">#  <span class="hljs-string">"mod_alias"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_auth"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_authn_file"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_evasive"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_redirect"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_rewrite"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_setenv"</span>,</span>
+<span class="hljs-meta">#  <span class="hljs-string">"mod_usertrack"</span>,</span>
+)
+
+<span class="hljs-meta">##</span>
+<span class="hljs-meta">## mod_status</span>
+<span class="hljs-meta">##</span>
+include <span class="hljs-string">"conf.d/status.conf"</span>
+<span class="hljs-meta">##</span>
+include <span class="hljs-string">"conf.d/fastcgi.conf
+</span></code></pre>
+<ol start="2">
+<li>编辑status.conf文件，将127.0.0.0/8改成本地需要访问的地址。</li>
+</ol>
+<pre><code class="hljs">$HTTP[<span class="hljs-string">"remoteip"</span>] == <span class="hljs-string">"192.168.1.0/24"</span> {
+</code></pre>
+<ol start="3">
+<li>修改/etc/lighttpd/conf.d/fastcgi.conf,在最后增加</li>
+</ol>
+<pre><code class="hljs">fastcgi.server += ( <span class="hljs-string">".php"</span> =&gt;
+((
+<span class="hljs-string">"host"</span> =&gt; <span class="hljs-string">"127.0.0.1"</span>,
+<span class="hljs-string">"port"</span> =&gt; <span class="hljs-string">"9000"</span>,
+<span class="hljs-string">"broken-scriptfilename"</span> =&gt; <span class="hljs-string">"enable"</span>
+))
+)
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="启动php-fpm-1"></a><a href="#启动php-fpm-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>启动php-fpm</h3>
+<pre><code class="hljs">systemctl <span class="hljs-keyword">start</span> lighttpd
+systemctl <span class="hljs-keyword">enable</span> lighttpd
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="第三步-安装sqlite"></a><a href="#第三步-安装sqlite" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第三步：安装sqlite</h2>
+<pre><code class="hljs">yum <span class="hljs-keyword">install</span> sqlite
+yum <span class="hljs-keyword">install</span> sqlite-devel
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="第四步-安装wordpress"></a><a href="#第四步-安装wordpress" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第四步：安装wordpress</h2>
+<pre><code class="hljs">wget https:<span class="hljs-comment">//cn.wordpress.org/latest-zh_CN.tar.gz</span>
+tar xvzf wordpress-xxx<span class="hljs-selector-class">.tar</span><span class="hljs-selector-class">.gz</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="安装sqlite插件"></a><a href="#安装sqlite插件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装sqlite插件</h3>
+<pre><code class="hljs">wget http<span class="hljs-variable">s:</span>//downloads.wordpress.org/plugin/sqlite-integration.<span class="hljs-number">1.8</span>.<span class="hljs-number">1</span>.zip
+unzip *.zip
+mv sqlite-integration wordpress/<span class="hljs-keyword">wp</span>-content/plugins
+<span class="hljs-keyword">cp</span> wordpress/<span class="hljs-keyword">wp</span>-content/plugins/sqlite-integration/db.php wordpress/<span class="hljs-keyword">wp</span>-content/
+<span class="hljs-keyword">cp</span> wordpress/<span class="hljs-keyword">wp</span>-config-sample.php wordpress/<span class="hljs-keyword">wp</span>-config.php
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="修改配置文件wp-configphp"></a><a href="#修改配置文件wp-configphp" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>修改配置文件wp-config.php</h3>
+<pre><code class="hljs"><span class="hljs-comment">/** WordPress数据库的名称 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_NAME'</span>, <span class="hljs-string">'wordpressDB'</span>);
+
+<span class="hljs-comment">/** MySQL数据库用户名 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_USER'</span>, <span class="hljs-string">''</span>);
+
+<span class="hljs-comment">/** MySQL数据库密码 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_PASSWORD'</span>, <span class="hljs-string">''</span>);
+
+<span class="hljs-comment">/** MySQL主机 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_HOST'</span>, <span class="hljs-string">'localhost'</span>);
+
+<span class="hljs-comment">/** 创建数据表时默认的文字编码 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_CHARSET'</span>, <span class="hljs-string">'utf8'</span>);
+
+<span class="hljs-comment">/** 数据库整理类型。如不确定请勿更改 */</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_COLLATE'</span>, <span class="hljs-string">''</span>);
+
+<span class="hljs-comment">//define('WP_ALLOW_REPAIR', true);//数据库修复时使用</span>
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_TYPE'</span>, <span class="hljs-string">'sqlite'</span>);    <span class="hljs-comment">//mysql or sqlite`</span>
+
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_FILE'</span>, <span class="hljs-string">'wordpressDB'</span>);
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'DB_DIR'</span>, <span class="hljs-string">'/var/www/html/'</span>);
+<span class="hljs-class"><span class="hljs-keyword">define</span></span>(<span class="hljs-string">'USE_MYSQL'</span>, <span class="hljs-literal">false</span>);
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="将wordpress拷贝到web服务目录"></a><a href="#将wordpress拷贝到web服务目录" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>将wordpress拷贝到web服务目录</h3>
+<pre><code class="hljs">mv wordpress /<span class="hljs-keyword">var</span>/www
+</code></pre>
+<p>然后访问一下试试吧</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/vpn/zerotier"><span class="arrow-prev">← </span><span>简单好用的点对点私网穿越工具：Zerotier-one</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#第一步-安装php">第一步:安装php</a><ul class="toc-headings"><li><a href="#首先安装依赖包">首先安装依赖包</a></li><li><a href="#然后安装php">然后安装php</a></li><li><a href="#测试php版本">测试php版本</a></li><li><a href="#修改-etc-php-fpmconf">修改/etc/php-fpm.conf</a></li><li><a href="#启动php-fpm">启动php-fpm</a></li></ul></li><li><a href="#第二步-安装lighttpd">第二步：安装lighttpd</a><ul class="toc-headings"><li><a href="#配置lighttpd">配置lighttpd</a></li><li><a href="#启动php-fpm-1">启动php-fpm</a></li></ul></li><li><a href="#第三步-安装sqlite">第三步：安装sqlite</a></li><li><a href="#第四步-安装wordpress">第四步：安装wordpress</a><ul class="toc-headings"><li><a href="#安装sqlite插件">安装sqlite插件</a></li><li><a href="#修改配置文件wp-configphp">修改配置文件wp-config.php</a></li><li><a href="#将wordpress拷贝到web服务目录">将wordpress拷贝到web服务目录</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

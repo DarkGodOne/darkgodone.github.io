@@ -6,7 +6,8 @@
       "openwrt/extend"
     ],
     "Git": ["git/ssh"],
-    "VPN": ["vpn/vpn","vpn/zerotier"],
-    "WebServer": ["webserver/webcloud"]
+    "VPN": ["vpn/vpn","vpn/zerotier","vpn/frp"],
+    "WebServer": ["webserver/webcloud"],
+    "RaspberryPi": ["raspberrypi/nextcloud"]
   }
 }

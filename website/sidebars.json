@@ -8,6 +8,6 @@
     "Git": ["git/ssh"],
     "VPN": ["vpn/vpn","vpn/zerotier","vpn/frp"],
     "WebServer": ["webserver/webcloud"],
-    "RaspberryPi": ["raspberrypi/nextcloud"]
+    "RaspberryPi": ["raspberrypi/nextcloud","raspberrypi/aria2"]
   }
 }

@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>一款很好用的内网穿透工具--FRP · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 废话"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="一款很好用的内网穿透工具--FRP · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="## 废话"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>VPN</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/vpn/frp">一款很好用的内网穿透工具--FRP</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">RaspberryPi</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/nextcloud">树莓派架设私有网盘--NextCloud</a></li><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/aria2">全能下载神器--aria2</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">一款很好用的内网穿透工具--FRP</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="废话"></a><a href="#废话" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>废话</h2>
+<p>之前提到了zerotier-one可以实现点对点私网穿透，但是实际使用你会发现，当你需要私网穿透的时候你必须安装客户端而且需要做一些配置(简单配置),总归有点不方便，最主要的问题是这个工具在手机上貌似有点问题，iphone的国区水果商店没有zerotier的客户端，据我亲测就是使用外服账号下载了也没有办法接入网络，这是一个硬伤，而且这个网络是依赖于zerotier的官方网络的，所以你被别人监控了你都不知道，没有安全感。
+正好我有用到云服务器，所以想到了使用代理中转的方式实现私网穿透，这其中发现frp是真的超级简单实用，下面就来感受下吧。</p>
+<p>##介绍
+FRP项目地址：<a href="https://github.com/fatedier/frp">https://github.com/fatedier/frp</a>
+frp 是一个可用于内网穿透的高性能的反向代理应用，支持 tcp, udp 协议，为 http 和 https 应用协议提供了额外的能力，且尝试性支持了点对点穿透。</p>
+<h2><a class="anchor" aria-hidden="true" id="安装"></a><a href="#安装" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装</h2>
+<p>FRP 采用 Go 语言开发，支持 Windows、Linux、MacOS、ARM等多平台部署。安装非常简单，只需要下载对应平台的压缩包然后解压就可以了。</p>
+<pre><code class="hljs">#树莓派即使<span class="hljs-number">4</span>b已经是<span class="hljs-number">64</span>位的CPU了，但是系统仍然是<span class="hljs-number">32</span>位的哦，所以别下载错了
+wget https:<span class="hljs-comment">//github.com/fatedier/frp/releases/download/v0.29.1/frp_0.29.1_linux_arm.tar.gz</span>
+tar xvzf frp_0<span class="hljs-number">.29</span><span class="hljs-number">.1</span>_linux_arm.tar.gz
+cd frp_0<span class="hljs-number">.29</span><span class="hljs-number">.1</span>_linux_arm
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="服务配置"></a><a href="#服务配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务配置</h2>
+<p>由于是中转模式的私网穿透，所以首先你需要有一台具有公网IP的服务器。服务器可以是任何 Windows、Linux、MacOS、ARM 的系统，因为frp都支持，我这里用的Centos7。
+压缩包内的配置文件有两个，一个是简化版frps.ini和frpc.ini，一个是完全版frps_full.ini和frpc_full.ini。</p>
+<h3><a class="anchor" aria-hidden="true" id="服务端配置"></a><a href="#服务端配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>服务端配置</h3>
+<pre><code class="hljs">$ cat frps_full.ini
+
+<span class="hljs-meta"># [common] is integral section</span>
+[common]
+<span class="hljs-meta"># bind_addr是服务端绑定的地址默认0.0.0.0</span>
+bind_addr = <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>
+
+<span class="hljs-meta"># bind_port是绑定的TCP端口，默认7000</span>
+bind_port = <span class="hljs-number">7000</span>
+
+<span class="hljs-meta"># 用于udp打洞用的端口，默认7001</span>
+bind_udp_port = <span class="hljs-number">7001</span>
+
+<span class="hljs-meta"># kcp协议使用的端口，可以跟bind_port使用相同的端口，如果没有设置默认是关闭的</span>
+<span class="hljs-meta"># kcp_bind_port = 7000</span>
+
+<span class="hljs-meta"># 代理服务地址，暂时不用</span>
+<span class="hljs-meta"># proxy_bind_addr = 127.0.0.1</span>
+
+<span class="hljs-meta"># 如果你要使用自己的web服务，那么必须打开该配置</span>
+<span class="hljs-meta"># http和https的端口可以跟bind_port相同</span>
+vhost_http_port = <span class="hljs-number">8080</span>
+<span class="hljs-meta">#vhost_https_port = 8080</span>
+
+<span class="hljs-meta"># web服务http请求超时时间，单位是秒，默认60s</span>
+<span class="hljs-meta"># vhost_http_timeout = 60</span>
+
+<span class="hljs-meta"># frps拥有的仪表板，可以查看frps的相关信息，透传情况</span>
+<span class="hljs-meta"># 默认监听地址与bind_addr一样</span>
+<span class="hljs-meta"># 只有当dashboard_port字段设置了以后，才会启用仪表板功能</span>
+dashboard_addr = <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>
+dashboard_port = <span class="hljs-number">7500</span>
+
+<span class="hljs-meta"># 仪表板的登录名和密码，如果不设置的话，默认都是admin</span>
+dashboard_user = admin
+dashboard_pwd = admin
+
+<span class="hljs-meta"># 仪表板资产目录(只有debug模式使用)</span>
+<span class="hljs-meta"># assets_dir = ./static</span>
+
+<span class="hljs-meta"># 日志文件存储位置</span>
+log_file = ./frps.log
+
+<span class="hljs-meta"># 日志级别：trace, debug, info, warn, error</span>
+log_level = info
+
+<span class="hljs-meta"># 日志最大保存天数</span>
+log_max_days = <span class="hljs-number">3</span>
+
+<span class="hljs-meta"># 当时用终端运行时，禁用日志颜色，默认是false(就是不禁用，花花绿绿看的多好看)</span>
+disable_log_color = <span class="hljs-literal">false</span>
+
+<span class="hljs-meta"># 鉴权token</span>
+token = xxxxxxx
+
+<span class="hljs-meta"># 心跳配置，这个最好不要修改默认值,默认心跳超时90秒</span>
+<span class="hljs-meta"># heartbeat_timeout = 90</span>
+
+<span class="hljs-meta"># 只允许客户单绑定如下端口，如果不设置则不限制</span>
+<span class="hljs-meta">#allow_ports = 2000-3000,3001,3003,4000-50000</span>
+
+<span class="hljs-meta"># 每个代理的最大连接池</span>
+max_pool_count = <span class="hljs-number">5</span>
+ 
+<span class="hljs-meta"># 每个客户端最多可以绑定多少个端口，默认0是不限制</span>
+max_ports_per_client = <span class="hljs-number">0</span>
+
+<span class="hljs-meta"># 通过在 frps 的配置文件中配置 subdomain_host，就可以启用该特性。之后在 frpc 的 http、https 类型的代理中可以不配置 custom_domains，而是配置一个 subdomain 参数。例如subdomain为test，则路由为test.frps.com</span>
+<span class="hljs-meta">#subdomain_host = frps.com</span>
+
+<span class="hljs-meta"># tcp多路复用, 默认true</span>
+tcp_mux = <span class="hljs-literal">true</span>
+
+<span class="hljs-meta"># custom 404 page for HTTP requests</span>
+<span class="hljs-meta"># custom_404_page = /path/to/404.html</span>
+
+$ ./frps -c ./frps.ini
+<span class="hljs-number">2019</span>/<span class="hljs-number">11</span>/<span class="hljs-number">07</span> <span class="hljs-number">06</span>:<span class="hljs-number">57</span>:<span class="hljs-number">38</span> [I] [service.go:<span class="hljs-number">139</span>] frps tcp listen on <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>:<span class="hljs-number">7000</span>
+<span class="hljs-number">2019</span>/<span class="hljs-number">11</span>/<span class="hljs-number">07</span> <span class="hljs-number">06</span>:<span class="hljs-number">57</span>:<span class="hljs-number">38</span> [I] [root.go:<span class="hljs-number">205</span>] Start frps success
+<span class="hljs-meta">#这里可以看到服务端已经成功启动并监听7000端口</span>
+
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="客户端配置"></a><a href="#客户端配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>客户端配置</h3>
+<p>frp客户端有许多功能，需要查看完整版配置文件，我这里就只写两个常用实例，具体其他实例可以参考frpc_full.ini配置文件。</p>
+<h4><a class="anchor" aria-hidden="true" id="实例一-tcp"></a><a href="#实例一-tcp" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>实例一：TCP</h4>
+<p>通过代理访问ssh</p>
+<pre><code class="hljs"><span class="hljs-section">[common]</span>
+<span class="hljs-comment"># server_addr 为 FRP 服务端的公网 IP</span>
+<span class="hljs-attr">server_addr</span> = <span class="hljs-number">4.3</span>.<span class="hljs-number">2.1</span>
+<span class="hljs-comment"># server_port 为 FRP 服务端监听的端口</span>
+<span class="hljs-attr">server_port</span> = <span class="hljs-number">7000</span>
+
+<span class="hljs-comment"># 名字自己起</span>
+<span class="hljs-section">[ssh]</span>
+<span class="hljs-comment"># 协议类型，tcp | udp | http | https | stcp | xtcp, 默认 tcp</span>
+<span class="hljs-attr">type</span> = tcp
+<span class="hljs-comment"># 本地服务地址</span>
+<span class="hljs-attr">local_ip</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>
+<span class="hljs-comment"># 本地服务端口</span>
+<span class="hljs-attr">local_port</span> = <span class="hljs-number">22</span>
+<span class="hljs-comment"># 远端注册端口</span>
+<span class="hljs-attr">remote_port</span> = <span class="hljs-number">6000</span>
+
+<span class="hljs-comment">#这样我们就可以使用公网地址的6000端口访问私网内的ssh服务了</span>
+
+</code></pre>
+<h4><a class="anchor" aria-hidden="true" id="实例二-http"></a><a href="#实例二-http" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>实例二：HTTP</h4>
+<pre><code class="hljs"><span class="hljs-section">[common]</span>
+<span class="hljs-comment"># server_addr 为 FRP 服务端的公网 IP</span>
+<span class="hljs-attr">server_addr</span> = <span class="hljs-number">4.3</span>.<span class="hljs-number">2.1</span>
+<span class="hljs-comment"># server_port 为 FRP 服务端监听的端口</span>
+<span class="hljs-attr">server_port</span> = <span class="hljs-number">7000</span>
+
+<span class="hljs-comment"># 名字自己起</span>
+<span class="hljs-section">[web]</span>
+<span class="hljs-comment"># 协议类型，tcp | udp | http | https | stcp | xtcp, 默认 tcp</span>
+<span class="hljs-attr">type</span> = http
+<span class="hljs-comment"># 本地服务端口</span>
+<span class="hljs-attr">local_port</span> = <span class="hljs-number">8080</span>
+<span class="hljs-comment"># 访问域名</span>
+<span class="hljs-attr">custom_domains</span> = aa.bbb.com
+<span class="hljs-comment"># 自定义二级域名，可以根据不同的前缀指向不同的服务</span>
+<span class="hljs-attr">subdomain</span> = test
+
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="frp仪表板"></a><a href="#frp仪表板" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>frp仪表板</h2>
+<p>frp提供了简单的仪表板用于监控和查看服务状态，只需要在frps配置文件中配置</p>
+<pre><code class="hljs">dashboard_addr = <span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>
+dashboard_port = <span class="hljs-number">7500</span>
+</code></pre>
+<p>即可通过7500端口访问仪表板，非常方便。
+<img src="/docs/assets/vpn/dashboard.png" alt="dashboard"></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/vpn/zerotier"><span class="arrow-prev">← </span><span>简单好用的点对点私网穿越工具：Zerotier-one</span></a><a class="docs-next button" href="/docs/webserver/webcloud"><span>Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#废话">废话</a></li><li><a href="#安装">安装</a></li><li><a href="#服务配置">服务配置</a><ul class="toc-headings"><li><a href="#服务端配置">服务端配置</a></li><li><a href="#客户端配置">客户端配置</a></li></ul></li><li><a href="#frp仪表板">frp仪表板</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

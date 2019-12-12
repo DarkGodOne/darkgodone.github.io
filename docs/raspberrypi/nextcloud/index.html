@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>树莓派架设私有网盘--NextCloud · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 安装"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="树莓派架设私有网盘--NextCloud · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="## 安装"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>RaspberryPi</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/frp">一款很好用的内网穿透工具--FRP</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">RaspberryPi</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/raspberrypi/nextcloud">树莓派架设私有网盘--NextCloud</a></li><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/aria2">全能下载神器--aria2</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">树莓派架设私有网盘--NextCloud</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="安装"></a><a href="#安装" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装</h2>
+<h3><a class="anchor" aria-hidden="true" id="1-依赖库"></a><a href="#1-依赖库" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 依赖库</h3>
+<pre><code class="hljs">sudo apt install apache2
+sudo apt install phpmyadmin php7.0-xml php7.0-curl php7.0-mcrypt
+sudo apt install marriadb-server
+sudo<span class="hljs-built_in"> service </span>apache2 restart
+sudo<span class="hljs-built_in"> service </span>marriadb restart
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="2-下载nextcloud软件包"></a><a href="#2-下载nextcloud软件包" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. 下载NextCloud软件包</h3>
+<p><a href="https://nextcloud.com/install/#instructions-server">NextCloud官网</a></p>
+<pre><code class="hljs">wget <span class="hljs-symbol">https:</span>/<span class="hljs-regexp">/download.nextcloud.com/server</span><span class="hljs-regexp">/releases/nextcloud</span>-<span class="hljs-number">17.0</span>.<span class="hljs-number">0</span>.zip
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="3-安装到web目录"></a><a href="#3-安装到web目录" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. 安装到web目录</h3>
+<pre><code class="hljs">unzip nextcloud<span class="hljs-number">-17.0</span><span class="hljs-number">.0</span>.zip
+sudo mv nextcloud /var/www/
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="配置"></a><a href="#配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置</h2>
+<h3><a class="anchor" aria-hidden="true" id="1-创建数据目录"></a><a href="#1-创建数据目录" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 创建数据目录</h3>
+<pre><code class="hljs">sudo <span class="hljs-keyword">cd</span> /<span class="hljs-keyword">var</span>/www/nextcloud
+sudo <span class="hljs-keyword">mkdir</span> data
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="2-修改权限"></a><a href="#2-修改权限" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. 修改权限</h3>
+<pre><code class="hljs"><span class="hljs-title">cd</span> ../
+<span class="hljs-title">sudo</span> chown -<span class="hljs-type">R</span> www-<span class="hljs-class"><span class="hljs-keyword">data</span>:www-<span class="hljs-keyword">data</span> nextcloud</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="3-添加访问域名"></a><a href="#3-添加访问域名" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. 添加访问域名</h3>
+<p>修改<code>/var/www/nextcloud/config/config.php</code>文件,将你会访问nextcloud所采用的网址都输入到这里. 按以下格式参考.</p>
+<pre><code class="hljs">'trusted_domains' =&gt;
+ <span class="hljs-built_in"> array </span>(
+    0 =&gt; '192.168.1.112',
+    1 =&gt; 'www.yourdomain.com',
+ ),
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="4-修改php上传限制"></a><a href="#4-修改php上传限制" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. 修改php上传限制</h3>
+<pre><code class="hljs">$ sudo vi /etc/php/7.0/apache2/php.ini
+
+post_max_size = 100M
+upload_max_filesize = 1024M
+
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="5-修改apache配置文件"></a><a href="#5-修改apache配置文件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. 修改apache配置文件</h3>
+<pre><code class="hljs"><span class="hljs-attribute">sudo</span> vim /etc/apache2/sites-available/000-default.conf
+
+<span class="hljs-section">&lt;VirtualHost *:80&gt;</span>
+        <span class="hljs-comment"># The ServerName directive sets the request scheme, hostname and port that</span>
+        <span class="hljs-comment"># the server uses to identify itself. This is used when creating</span>
+        <span class="hljs-comment"># redirection URLs. In the context of virtual hosts, the ServerName</span>
+        <span class="hljs-comment"># specifies what hostname must appear in the request's Host: header to</span>
+        <span class="hljs-comment"># match this virtual host. For the default virtual host (this file) this</span>
+        <span class="hljs-comment"># value is not decisive as it is used as a last resort host regardless.</span>
+        <span class="hljs-comment"># However, you must set it for any further virtual host explicitly.</span>
+        <span class="hljs-comment">#ServerName www.example.com</span>
+
+        <span class="hljs-attribute">ServerAdmin</span> webmaster@localhost
+        <span class="hljs-comment"># 修改程序路径根路径</span>
+        <span class="hljs-attribute"><span class="hljs-nomarkup">DocumentRoot</span></span> /var/www/nextcloud
+
+        <span class="hljs-comment"># Available loglevels: trace8, ..., trace1, debug, info, notice, warn,</span>
+        <span class="hljs-comment"># error, crit, alert, emerg.</span>
+        <span class="hljs-comment"># It is also possible to configure the loglevel for particular</span>
+        <span class="hljs-comment"># modules, e.g.</span>
+        <span class="hljs-comment">#LogLevel info ssl:warn</span>
+
+        <span class="hljs-attribute">ErrorLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/error.log
+        <span class="hljs-attribute">CustomLog</span> <span class="hljs-variable">${APACHE_LOG_DIR}</span>/access.log combined
+
+        <span class="hljs-comment"># For most configuration files from conf-available/, which are</span>
+        <span class="hljs-comment"># enabled or disabled at a global level, it is possible to</span>
+        <span class="hljs-comment"># include a line for only one particular virtual host. For example the</span>
+        <span class="hljs-comment"># following line enables the CGI configuration for this host only</span>
+        <span class="hljs-comment"># after it has been globally disabled with "a2disconf".</span>
+        <span class="hljs-comment">#Include conf-available/serve-cgi-bin.conf</span>
+<span class="hljs-section">&lt;/VirtualHost&gt;</span>
+
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="6-重启apache"></a><a href="#6-重启apache" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6. 重启apache</h3>
+<pre><code class="hljs"><span class="hljs-attribute">sudo</span> systemctl restart apache2
+
+<span class="hljs-comment">#然后就可以通过web访问了，但是还不能使用</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="7-配置mysql"></a><a href="#7-配置mysql" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>7. 配置mysql</h3>
+<pre><code class="hljs">a. mysqladmin -u root -p password YOUR_PASSWORD_HERE, 设置root密码.
+b. mysql -uroot -p 用root登入
+c. 登入成功后, 创建数据库: <span class="hljs-keyword">create</span> <span class="hljs-keyword">database</span> nextcloud;
+d. 创建用户, <span class="hljs-keyword">create</span> <span class="hljs-keyword">user</span> <span class="hljs-string">'nextclouduser'</span>@<span class="hljs-string">'localhost'</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">by</span> <span class="hljs-string">'YOUR_PASSWORD_HERE'</span>;
+e. 授权. <span class="hljs-keyword">grant</span> <span class="hljs-keyword">all</span> <span class="hljs-keyword">privileges</span> <span class="hljs-keyword">on</span> nextcloud.* <span class="hljs-keyword">to</span> <span class="hljs-string">'nextclouduser'</span>@<span class="hljs-string">'localhost'</span> <span class="hljs-keyword">identified</span> <span class="hljs-keyword">by</span> <span class="hljs-string">'YOUR_PASSWORD_HERE'</span>;
+f. exit退出即可
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="8-登录nextcloud"></a><a href="#8-登录nextcloud" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>8. 登录nextcloud</h3>
+<p>登录web，根据提示录入数据存储目录以及数据库信息等内容，nextcloud会自动初始化，登录后效果
+<img src="/docs/assets/raspberry/nextcloud.png" alt="nextcloud"></p>
+<h2><a class="anchor" aria-hidden="true" id="配置连接本地移动硬盘"></a><a href="#配置连接本地移动硬盘" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置连接本地移动硬盘</h2>
+<h3><a class="anchor" aria-hidden="true" id="1-安装依赖-新系统已经默认安装"></a><a href="#1-安装依赖-新系统已经默认安装" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 安装依赖（新系统已经默认安装）</h3>
+<pre><code class="hljs">sudo apt-<span class="hljs-builtin-name">get</span> install ntfs-3g
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="2-挂载硬盘"></a><a href="#2-挂载硬盘" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. 挂载硬盘</h3>
+<p>插入硬盘，最新的系统默认会自动加载，但是我们需要指定一个固定的位置</p>
+<pre><code class="hljs"># 创建挂载目录
+$ sudo mkdir /mnt/localHD
+
+# 查看移动硬盘所属盘符(一般是/dev/sda1)
+$ sudo fdisk -l
+Disk /dev/sda: <span class="hljs-number">931.5</span> GiB, <span class="hljs-number">1000170586112</span> bytes, <span class="hljs-number">1953458176</span> sectors
+Disk model: My Passport <span class="hljs-number">0748</span>
+Units: sectors of <span class="hljs-number">1</span> * <span class="hljs-number">512</span> = <span class="hljs-number">512</span> bytes
+Sector size (logical/physical): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+I/O size (minimum/optimal): <span class="hljs-number">512</span> bytes / <span class="hljs-number">512</span> bytes
+Disklabel type: dos
+Disk identifier: <span class="hljs-number">0x01de565c</span>
+
+Device     Boot Start        End    Sectors   Size Id Type
+/dev/sda1  *     <span class="hljs-number">2048</span> <span class="hljs-number">1953458175</span> <span class="hljs-number">1953456128</span> <span class="hljs-number">931.5</span>G  <span class="hljs-number">7</span> HPFS/NTFS/exFAT
+
+# 添加系统自动挂载
+$ sudo vim /etc/fstab
+在最后一行添加
+/dev/sda1 /mnt/localHD ntfs<span class="hljs-number">-3</span>g defaults,noexec,umask=<span class="hljs-number">0000</span> <span class="hljs-number">0</span> <span class="hljs-number">0</span>
+
+# 重启生效
+$ sudo reboot
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="3-添加外部存储功能-默认不开启"></a><a href="#3-添加外部存储功能-默认不开启" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. 添加外部存储功能（默认不开启）</h3>
+<p>打开nextcloud页面，头像--&gt;应用--&gt;搜索<code>External storage support</code>，然后启用
+<img src="/docs/assets/raspberry/external.png" alt="external"></p>
+<h3><a class="anchor" aria-hidden="true" id="4-配置本地硬盘"></a><a href="#4-配置本地硬盘" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. 配置本地硬盘</h3>
+<p>打开nextcloud页面，头像--&gt;设置--&gt;管理--&gt;外部存储，按照如下设置添加本地硬盘，不能直接添加硬盘挂载的目录，我试了很多次都不行，只能挂载上一级目录
+<img src="/docs/assets/raspberry/externalHD.png" alt="externalHD"></p>
+<h3><a class="anchor" aria-hidden="true" id="5-测试一下吧"></a><a href="#5-测试一下吧" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. 测试一下吧</h3>
+<p><img src="/docs/assets/raspberry/nextcloudlink.png" alt="nextcloudlink"></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/webserver/webcloud"><span class="arrow-prev">← </span><span>Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</span></a><a class="docs-next button" href="/docs/raspberrypi/aria2"><span>全能下载神器--aria2</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#安装">安装</a><ul class="toc-headings"><li><a href="#1-依赖库">1. 依赖库</a></li><li><a href="#2-下载nextcloud软件包">2. 下载NextCloud软件包</a></li><li><a href="#3-安装到web目录">3. 安装到web目录</a></li></ul></li><li><a href="#配置">配置</a><ul class="toc-headings"><li><a href="#1-创建数据目录">1. 创建数据目录</a></li><li><a href="#2-修改权限">2. 修改权限</a></li><li><a href="#3-添加访问域名">3. 添加访问域名</a></li><li><a href="#4-修改php上传限制">4. 修改php上传限制</a></li><li><a href="#5-修改apache配置文件">5. 修改apache配置文件</a></li><li><a href="#6-重启apache">6. 重启apache</a></li><li><a href="#7-配置mysql">7. 配置mysql</a></li><li><a href="#8-登录nextcloud">8. 登录nextcloud</a></li></ul></li><li><a href="#配置连接本地移动硬盘">配置连接本地移动硬盘</a><ul class="toc-headings"><li><a href="#1-安装依赖-新系统已经默认安装">1. 安装依赖（新系统已经默认安装）</a></li><li><a href="#2-挂载硬盘">2. 挂载硬盘</a></li><li><a href="#3-添加外部存储功能-默认不开启">3. 添加外部存储功能（默认不开启）</a></li><li><a href="#4-配置本地硬盘">4. 配置本地硬盘</a></li><li><a href="#5-测试一下吧">5. 测试一下吧</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Centos7上使用StrongSwan部署IPSecVPN · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="StrongSwan是开源的IPsec vpn解决方案。它支持IKEv1和IKEv2密钥交换协议以及Linux内核的本地NETKEY IPsec栈。本教程将向您展示如何使用strongSwan在CentOS 7上设置IPSec VPN服务器。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Centos7上使用StrongSwan部署IPSecVPN · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="StrongSwan是开源的IPsec vpn解决方案。它支持IKEv1和IKEv2密钥交换协议以及Linux内核的本地NETKEY IPsec栈。本教程将向您展示如何使用strongSwan在CentOS 7上设置IPSec VPN服务器。"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>VPN</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div></div></section></div><script>
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Centos7上使用StrongSwan部署IPSecVPN · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="StrongSwan是开源的IPsec vpn解决方案。它支持IKEv1和IKEv2密钥交换协议以及Linux内核的本地NETKEY IPsec栈。本教程将向您展示如何使用strongSwan在CentOS 7上设置IPSec VPN服务器。"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Centos7上使用StrongSwan部署IPSecVPN · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="StrongSwan是开源的IPsec vpn解决方案。它支持IKEv1和IKEv2密钥交换协议以及Linux内核的本地NETKEY IPsec栈。本教程将向您展示如何使用strongSwan在CentOS 7上设置IPSec VPN服务器。"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>VPN</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/frp">一款很好用的内网穿透工具--FRP</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">RaspberryPi</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/nextcloud">树莓派架设私有网盘--NextCloud</a></li><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/aria2">全能下载神器--aria2</a></li></ul></div></div></section></div><script>
             var coll = document.getElementsByClassName('collapsible');
             var checkActiveCategory = true;
             for (var i = 0; i < coll.length; i++) {
@@ -56,19 +56,40 @@
             });
         </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Centos7上使用StrongSwan部署IPSecVPN</h1></header><article><div><span><p>StrongSwan是开源的IPsec vpn解决方案。它支持IKEv1和IKEv2密钥交换协议以及Linux内核的本地NETKEY IPsec栈。本教程将向您展示如何使用strongSwan在CentOS 7上设置IPSec VPN服务器。</p>
 <h2><a class="anchor" aria-hidden="true" id="安装"></a><a href="#安装" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装</h2>
-<p>strongSwan包可以在Enterprise Linux (EPEL)存储库的额外包中获得。我们应该先启用EPEL，然后安装strongSwan。</p>
-<pre><code class="hljs">yum install http:<span class="hljs-regexp">//</span>ftp.nluug.nl<span class="hljs-regexp">/pub/</span>os<span class="hljs-regexp">/Linux/</span>distr<span class="hljs-regexp">/fedora-epel/</span><span class="hljs-number">7</span><span class="hljs-regexp">/x86_64/</span>Packages<span class="hljs-regexp">/e/</span>epel-release-<span class="hljs-number">7</span>-<span class="hljs-number">11</span>.noarch.rpm
-yum install strongswan openssl
+<p>strongSwan包可以在Enterprise Linux (EPEL)存储库的额外包中获得。但是还是建议使用压缩包自行编译，之前用系统自带包windows总是连接失败。</p>
+<pre><code class="hljs"><span class="hljs-meta"># 安装依赖</span>
+yum install pam-devel openssl-devel  <span class="hljs-built_in">make</span>  gcc  gmp-devel wget -y
+
+<span class="hljs-meta"># 下载软件包并编译，我这现在最新版本为5.8.1</span>
+wget http:<span class="hljs-comment">//download.strongswan.org/strongswan.tar.gz</span>
+tar xzf strongswan.tar.gz
+cd strongswan<span class="hljs-number">-5.8</span><span class="hljs-number">.1</span>/
+
+<span class="hljs-meta"># 配置编译</span>
+./configure  --<span class="hljs-keyword">enable</span>-eap-identity --<span class="hljs-keyword">enable</span>-eap-md5 \
+--<span class="hljs-keyword">enable</span>-eap-mschapv2 --<span class="hljs-keyword">enable</span>-eap-tls --<span class="hljs-keyword">enable</span>-eap-ttls --<span class="hljs-keyword">enable</span>-eap-peap  \
+--<span class="hljs-keyword">enable</span>-eap-tnc --<span class="hljs-keyword">enable</span>-eap-dynamic --<span class="hljs-keyword">enable</span>-eap-radius --<span class="hljs-keyword">enable</span>-xauth-eap  \
+--<span class="hljs-keyword">enable</span>-xauth-pam--<span class="hljs-keyword">enable</span>-dhcp--<span class="hljs-keyword">enable</span>-openssl--<span class="hljs-keyword">enable</span>-addrblock --<span class="hljs-keyword">enable</span>-unity\
+--<span class="hljs-keyword">enable</span>-certexpire --<span class="hljs-keyword">enable</span>-radattr --<span class="hljs-keyword">enable</span>-tools --<span class="hljs-keyword">enable</span>-openssl --<span class="hljs-keyword">disable</span>-gmp \
+--<span class="hljs-keyword">enable</span>-kernel-libipsec
+
+<span class="hljs-meta"># 编译安装</span>
+<span class="hljs-built_in">make</span>
+<span class="hljs-built_in">make</span> install
+
+<span class="hljs-meta"># 验证安装</span>
+ipsec --version
+
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="生成证书"></a><a href="#生成证书" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>生成证书</h2>
-<p>VPN客户机和服务器都需要一个证书来标识和验证它们自己。我准备了两个shell脚本来生成和签署证书。首先，我们将<a href="/docs/assets/files/server_key.sh">server_key.sh</a>,<a href="/docs/assets/files/client_key.sh">client_key.sh</a>这两个脚本下载到/etc/strongswan/ipsec.d文件夹中。</p>
-<pre><code class="hljs"><span class="hljs-keyword">cd</span> /etc/strongswan/ipsec.d
+<p>VPN客户机和服务器都需要一个证书来标识和验证它们自己。我准备了两个shell脚本来生成和签署证书。首先，我们将<a href="/docs/assets/files/server_key.sh">server_key.sh</a>,<a href="/docs/assets/files/client_key.sh">client_key.sh</a>这两个脚本下载到/usr/local/etc/ipsec.d文件夹中。</p>
+<pre><code class="hljs"><span class="hljs-keyword">cd</span> /usr/local/etc/ipsec.d
 wget http<span class="hljs-variable">s:</span>//github.darkgod.online/docs/assets/<span class="hljs-keyword">files</span>/server_key.<span class="hljs-keyword">sh</span>
 wget http<span class="hljs-variable">s:</span>//github.darkgod.online/docs/assets/<span class="hljs-keyword">files</span>/client_key.<span class="hljs-keyword">sh</span>
 chmod +<span class="hljs-keyword">x</span> server_key.<span class="hljs-keyword">sh</span>
 chmod +<span class="hljs-keyword">x</span> client_key.<span class="hljs-keyword">sh</span>
 </code></pre>
-<p>在这两个脚本中，我设置的组织名称为<code>DARKGOD-ONLINE</code>。如果你要修改它，就打开<code>.sh</code>文件然后把<code>O=DARKGOD-ONLINE</code>替换为<code>O=你的组织名称</code>。</br>
+<p>在这两个脚本中，我设置的组织名称为<code>DARKGODONLINE</code>。如果你要修改它，就打开<code>.sh</code>文件然后把<code>O=DARKGODONLINE</code>替换为<code>O=你的组织名称</code>,注意脚本中的&quot;C=&quot;和&quot;O=&quot;的值必须一致。</br>
 然后，用<code>server_key.sh</code>跟你服务器的IP地址给服务器生成证书颁发机构(CA)密钥和证书。把<code>SERVER_IP</code>替换为你服务器的IP地址。</p>
 <pre><code class="hljs">./server_key<span class="hljs-selector-class">.sh</span> SERVER_IP
 </code></pre>
@@ -76,58 +97,89 @@ chmod +<span class="hljs-keyword">x</span> client_key.<span class="hljs-keyword"
 <pre><code class="hljs">./client_key<span class="hljs-selector-class">.sh</span> john john@gmail<span class="hljs-selector-class">.com</span>
 </code></pre>
 <p>运行脚本前，将&quot;john&quot;和他的email替换为你的。</br>
-服务端和客户端的证书都生成好了以后，拷贝<code>/etc/strongswan/ipsec.d/john.p12</code>和<code>/etc/strongswan/ipsec.d/cacerts/strongswanCert.pem</code>到你的本地电脑。</p>
+服务端和客户端的证书都生成好了以后，拷贝<code>/usr/local/etc/ipsec.d/john.p12</code>或<code>/usr/local/etc/ipsec.d/cacerts/strongswanCert.pem</code>到你的本地电脑。</p>
 <h2><a class="anchor" aria-hidden="true" id="配置"></a><a href="#配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置</h2>
 <p>打开IPSec的配置文件。</p>
-<pre><code class="hljs">vi /etc/strongswan/ipsec<span class="hljs-selector-class">.conf</span>
+<pre><code class="hljs">vi <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/etc/i</span>psec.conf
 </code></pre>
 <p>用下面的内容替换文件内容：</p>
 <pre><code class="hljs">config setup
-    <span class="hljs-attribute">uniqueids</span>=never
-    <span class="hljs-attribute">charondebug</span>=<span class="hljs-string">"cfg 2, dmn 2, ike 2, net 0"</span>
+    <span class="hljs-attribute">uniqueids</span>=never #多台设备同时在线
 
-conn %default
+conn iOS_cert
+    <span class="hljs-attribute">keyexchange</span>=ikev1
+    <span class="hljs-attribute">fragmentation</span>=<span class="hljs-literal">yes</span>
     <span class="hljs-attribute">left</span>=%defaultroute
+    <span class="hljs-attribute">leftauth</span>=pubkey
     <span class="hljs-attribute">leftsubnet</span>=0.0.0.0/0
     <span class="hljs-attribute">leftcert</span>=vpnHostCert.pem
     <span class="hljs-attribute">right</span>=%any
-    <span class="hljs-attribute">rightsourceip</span>=172.16.1.100/16
-
-conn CiscoIPSec
-    <span class="hljs-attribute">keyexchange</span>=ikev1
-    <span class="hljs-attribute">fragmentation</span>=<span class="hljs-literal">yes</span>
     <span class="hljs-attribute">rightauth</span>=pubkey
     <span class="hljs-attribute">rightauth2</span>=xauth
-    <span class="hljs-attribute">leftsendcert</span>=always
-    <span class="hljs-attribute">rekey</span>=<span class="hljs-literal">no</span>
+    <span class="hljs-attribute">rightsourceip</span>=10.31.2.0/24
+    <span class="hljs-attribute">rightcert</span>=guoxiaokai527Cert.pem
     <span class="hljs-attribute">auto</span>=add
 
-conn XauthPsk
+conn android_xauth_psk
     <span class="hljs-attribute">keyexchange</span>=ikev1
+    <span class="hljs-attribute">left</span>=%defaultroute
     <span class="hljs-attribute">leftauth</span>=psk
+    <span class="hljs-attribute">leftsubnet</span>=0.0.0.0/0
+    <span class="hljs-attribute">right</span>=%any
     <span class="hljs-attribute">rightauth</span>=psk
     <span class="hljs-attribute">rightauth2</span>=xauth
+    <span class="hljs-attribute">rightsourceip</span>=10.31.2.0/24
     <span class="hljs-attribute">auto</span>=add
 
-conn IpsecIKEv2
+conn networkmanager-strongswan
     <span class="hljs-attribute">keyexchange</span>=ikev2
+    <span class="hljs-attribute">left</span>=%defaultroute
     <span class="hljs-attribute">leftauth</span>=pubkey
+    <span class="hljs-attribute">leftsubnet</span>=0.0.0.0/0
+    <span class="hljs-attribute">leftcert</span>=vpnHostCert.pem
+    <span class="hljs-attribute">right</span>=%any
     <span class="hljs-attribute">rightauth</span>=pubkey
-    <span class="hljs-attribute">leftsendcert</span>=always
+    <span class="hljs-attribute">rightsourceip</span>=10.31.2.0/24
+    <span class="hljs-attribute">rightcert</span>=guoxiaokai527Cert.pem
     <span class="hljs-attribute">auto</span>=add
 
-conn IpsecIKEv2-EAP
+conn ios_ikev2
+    <span class="hljs-attribute">keyexchange</span>=ikev2
+    <span class="hljs-attribute">ike</span>=aes256-sha256-modp2048,3des-sha1-modp2048,aes256-sha1-modp2048!
+    <span class="hljs-attribute">esp</span>=aes256-sha256,3des-sha1,aes256-sha1!
+    <span class="hljs-attribute">rekey</span>=<span class="hljs-literal">no</span>
+    <span class="hljs-attribute">left</span>=%defaultroute
+    <span class="hljs-attribute">leftid</span>=<span class="hljs-string">"198.13.52.213"</span>
+    <span class="hljs-attribute">leftsendcert</span>=always
+    <span class="hljs-attribute">leftsubnet</span>=0.0.0.0/0
+    <span class="hljs-attribute">leftcert</span>=vpnHostCert.pem
+    <span class="hljs-attribute">right</span>=%any
+    <span class="hljs-attribute">rightauth</span>=eap-mschapv2
+    <span class="hljs-attribute">rightsourceip</span>=10.31.2.0/24
+    <span class="hljs-attribute">rightsendcert</span>=never
+    <span class="hljs-attribute">eap_identity</span>=%any
+    <span class="hljs-attribute">dpdaction</span>=clear
+    <span class="hljs-attribute">fragmentation</span>=<span class="hljs-literal">yes</span>
+    <span class="hljs-attribute">auto</span>=add
+
+conn windows
     <span class="hljs-attribute">keyexchange</span>=ikev2
     <span class="hljs-attribute">ike</span>=aes256-sha1-modp1024!
     <span class="hljs-attribute">rekey</span>=<span class="hljs-literal">no</span>
+    <span class="hljs-attribute">left</span>=%defaultroute
     <span class="hljs-attribute">leftauth</span>=pubkey
-    <span class="hljs-attribute">leftsendcert</span>=always
+    <span class="hljs-attribute">leftsubnet</span>=0.0.0.0/0
+    <span class="hljs-attribute">leftcert</span>=vpnHostCert.pem
+    <span class="hljs-attribute">right</span>=%any
     <span class="hljs-attribute">rightauth</span>=eap-mschapv2
+    <span class="hljs-attribute">rightsourceip</span>=10.31.2.0/24
+    <span class="hljs-attribute">rightsendcert</span>=never
     <span class="hljs-attribute">eap_identity</span>=%any
     <span class="hljs-attribute">auto</span>=add
+
 </code></pre>
 <p>然后编辑strongSwan的配置文件，strongSwan.conf</p>
-<pre><code class="hljs">vi /etc/strongswan/strongswan<span class="hljs-selector-class">.conf</span>
+<pre><code class="hljs">vi <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/etc/</span>strongswan.conf
 </code></pre>
 <p>使用下面的内容替换文件原有内容：</p>
 <pre><code class="hljs"><span class="hljs-section">charon</span> {
@@ -145,15 +197,18 @@ conn IpsecIKEv2-EAP
 include strongswan.d/<span class="hljs-regexp">*.conf</span>
 </code></pre>
 <p>编辑IPsec密码文件来添加用户名和密码：</p>
-<pre><code class="hljs">vi /etc/strongswan/ipsec<span class="hljs-selector-class">.secrets</span>
+<pre><code class="hljs">vi <span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/etc/i</span>psec.secrets
 </code></pre>
 <p>添加用户&quot;john&quot;到文件内：</p>
 <pre><code class="hljs">: RSA vpnHostKey.pem
 : <span class="hljs-type">PSK</span> <span class="hljs-string">"PSK_KEY"</span>
+: <span class="hljs-type">XAUTH</span> <span class="hljs-string">"XAUTH_KEY"</span>
 john %any : <span class="hljs-type">EAP</span> <span class="hljs-string">"John's Password"</span>
-john %any : <span class="hljs-type">XAUTH</span> <span class="hljs-string">"John's Password"</span>
 </code></pre>
-<p>请注意，':' 两侧都需要有空格。</p>
+<p>将上面的PSK_KEY单词更改为你需要的PSK认证方式的密钥;</br>
+将上面的XAUTH_KEY单词更改为你需要的XAUTH认证方式的密码,该认证方式的用户名是随意的;</br>
+将上面的john改为自己想要的登录名,“John's Password”改为自己想要的密码,可以添加多行,得到多个用户,这即是使用IKEv2的用户名+密码认证方式的登录凭据;</br>
+请注意，':' 两侧都需要有空格。(添加完用户后可以使用ipsec reload重新加载配置)</p>
 <h2><a class="anchor" aria-hidden="true" id="允许ipv4转发"></a><a href="#允许ipv4转发" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>允许IPV4转发</h2>
 <p>编辑<code>/etc/sysctl.conf</code>来使能linux内核的转发功能。</p>
 <pre><code class="hljs">vi /etc/sysctl<span class="hljs-selector-class">.conf</span>
@@ -168,12 +223,66 @@ john %any : <span class="hljs-type">XAUTH</span> <span class="hljs-string">"John
 <p>在你的服务器上打开VPN相关端口</p>
 <pre><code class="hljs">firewall-<span class="hljs-keyword">cmd</span><span class="bash"> --permanent --add-service=<span class="hljs-string">"ipsec"</span></span>
 firewall-<span class="hljs-keyword">cmd</span><span class="bash"> --permanent --add-port=4500/udp</span>
+firewall-<span class="hljs-keyword">cmd</span><span class="bash"> --permanent --add-port=500/udp</span>
 firewall-<span class="hljs-keyword">cmd</span><span class="bash"> --permanent --add-masquerade</span>
 firewall-<span class="hljs-keyword">cmd</span><span class="bash"> --reload</span>
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="启动vpn"></a><a href="#启动vpn" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>启动VPN</h2>
-<pre><code class="hljs"><span class="hljs-symbol">systemctl</span> start <span class="hljs-keyword">strongswan
-</span><span class="hljs-symbol">systemctl</span> enable <span class="hljs-keyword">strongswan
-</span></code></pre>
-<p>StrongSwan现在就运行在你的服务器上了。在你的设备上安装<code>strongswanCert.pem</code>和<code>.p12</code>证书文件，你就可以连接你的VPN科学上网啦。</p>
-</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/git/ssh"><span class="arrow-prev">← </span><span>Git 配置SSH方式</span></a><a class="docs-next button" href="/docs/vpn/zerotier"><span>简单好用的点对点私网穿越工具：Zerotier-one</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#安装">安装</a></li><li><a href="#生成证书">生成证书</a></li><li><a href="#配置">配置</a></li><li><a href="#允许ipv4转发">允许IPV4转发</a></li><li><a href="#配置防火墙">配置防火墙</a></li><li><a href="#启动vpn">启动VPN</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>
+<pre><code class="hljs">编辑自启动脚本ipsecd.service，保存到/etc/systemd/system/ipsecd.service
+[Unit]
+<span class="hljs-attribute">Description</span>=ipsec <span class="hljs-keyword">for</span> strongswan<span class="hljs-built_in"> Service
+</span><span class="hljs-attribute">After</span>=network.target
+
+[Service]
+<span class="hljs-attribute">Type</span>=forking
+<span class="hljs-attribute">PIDFile</span>=/run/charon.pid
+<span class="hljs-attribute">ExecStart</span>=/usr/local/sbin/ipsec start
+<span class="hljs-attribute">Restart</span>=always
+<span class="hljs-attribute">RestartSec</span>=10s
+
+[Install]
+<span class="hljs-attribute">WantedBy</span>=multi-user.target
+
+启动并设置开机启动
+systemctl start ipsecd
+systemctl <span class="hljs-builtin-name">enable</span> ipsecd
+</code></pre>
+<p>StrongSwan现在就运行在你的服务器上了。在你的设备上安装<code>strongswanCert.pem</code>或<code>.p12</code>证书文件，你就可以连接你的VPN科学上网啦。</p>
+<h2><a class="anchor" aria-hidden="true" id="ios配置"></a><a href="#ios配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>IOS配置</h2>
+<p>打开手机设置，进入通用-&gt;VPN-&gt;添加VPN配置
+<img src="/docs/assets/vpn/iosvpn.png" alt="iosvpn">
+类型 -- 选择IPsec，这个不需要安装证书，会方便一点</br>
+描述 -- vpn名称（随便填）</br>
+服务器 -- 服务器IP</br>
+账户 -- 填写用户名</br>
+密码 -- 填写密码</br>
+密钥 -- 填写PSK密码</br>
+配置完点击完成，然后就可以连接VPN放飞自我了</p>
+<h2><a class="anchor" aria-hidden="true" id="windows10配置"></a><a href="#windows10配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Windows10配置</h2>
+<h3><a class="anchor" aria-hidden="true" id="安装证书"></a><a href="#安装证书" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装证书</h3>
+<p>首先下载之前生成的.P12文件，然后双击P12文件，选择本地计算机，点击下一步：
+<img src="/docs/assets/vpn/import1.png" alt="import1"></p>
+<p>已经选择了要导入的p12文件，然后直接点击下一步
+<img src="/docs/assets/vpn/import2.png" alt="import2"></p>
+<p>输入证书的密码，然后点击下一步
+<img src="/docs/assets/vpn/import3.png" alt="import3"></p>
+<p>选择自行制定存储路径，然后点击浏览选择受信任的根证书颁发机构，点击下一步
+<img src="/docs/assets/vpn/import4.png" alt="import4"></p>
+<p>点击完成，导入成功
+<img src="/docs/assets/vpn/import5.png" alt="import5"></p>
+<h3><a class="anchor" aria-hidden="true" id="配置vpn"></a><a href="#配置vpn" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置VPN</h3>
+<p>点击网络图标，点击进入网络和Internet
+<img src="/docs/assets/vpn/configvpn1.png" alt="configvpn1"></p>
+<p>点击VPN，添加VPN
+<img src="/docs/assets/vpn/configvpn2.png" alt="configvpn2"></p>
+<p>填入相关信息，点击保存
+<img src="/docs/assets/vpn/configvpn3.png" alt="configvpn3">
+VPN提供商-&gt;只有一个选项</br>
+连接名称-&gt;随便起</br>
+服务器名称或地址-&gt;填写服务器IP</br>
+VPN类型-&gt;选择IKEv2</br>
+登录信息的类型-&gt;默认选择用户名和密码</br>
+用户名-&gt;填写用户名</br>
+密码-&gt;填写密码</br>
+然后就可以愉快的放飞自我了</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/git/ssh"><span class="arrow-prev">← </span><span>Git 配置SSH方式</span></a><a class="docs-next button" href="/docs/vpn/zerotier"><span>简单好用的点对点私网穿越工具：Zerotier-one</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#安装">安装</a></li><li><a href="#生成证书">生成证书</a></li><li><a href="#配置">配置</a></li><li><a href="#允许ipv4转发">允许IPV4转发</a></li><li><a href="#配置防火墙">配置防火墙</a></li><li><a href="#启动vpn">启动VPN</a></li><li><a href="#ios配置">IOS配置</a></li><li><a href="#windows10配置">Windows10配置</a><ul class="toc-headings"><li><a href="#安装证书">安装证书</a></li><li><a href="#配置vpn">配置VPN</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

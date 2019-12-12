@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>全能下载神器--aria2 · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 安装"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="全能下载神器--aria2 · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="## 安装"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.darkgod.online/kafka" target="_self">中文Kafka</a></li><li class=""><a href="https://github.darkgod.online/dep" target="_self">中文dep</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>RaspberryPi</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/frp">一款很好用的内网穿透工具--FRP</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">RaspberryPi</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/nextcloud">树莓派架设私有网盘--NextCloud</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/docs/raspberrypi/aria2">全能下载神器--aria2</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">全能下载神器--aria2</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="安装"></a><a href="#安装" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装</h2>
+<pre><code class="hljs">sudo apt-<span class="hljs-builtin-name">get</span> install aria2
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="配置"></a><a href="#配置" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置</h2>
+<h3><a class="anchor" aria-hidden="true" id="创建文件夹"></a><a href="#创建文件夹" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>创建文件夹</h3>
+<pre><code class="hljs"><span class="hljs-built_in">mkdir</span> /etc/aria2
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="创建session和配置文件"></a><a href="#创建session和配置文件" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>创建session和配置文件</h3>
+<pre><code class="hljs">touch /etc/aria2/aria2<span class="hljs-selector-class">.session</span>
+touch /etc/aria2/aria2<span class="hljs-selector-class">.conf</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="编辑-etc-aria2-aria2conf"></a><a href="#编辑-etc-aria2-aria2conf" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>编辑/etc/aria2/aria2.conf</h3>
+<pre><code class="hljs"><span class="hljs-meta">## 文件保存相关 ##</span>
+
+<span class="hljs-meta"># 文件保存目录</span>
+dir=/mnt/storage/download
+<span class="hljs-meta"># 启用磁盘缓存, 0为禁用缓存, 需1.16以上版本, 默认:16M</span>
+disk-cache=<span class="hljs-number">32</span>M
+<span class="hljs-meta"># 断点续传</span>
+continue=<span class="hljs-literal">true</span>
+
+<span class="hljs-meta"># 文件预分配方式, 能有效降低磁盘碎片, 默认:prealloc</span>
+<span class="hljs-meta"># 预分配所需时间: none &lt; falloc ? trunc &lt; prealloc</span>
+<span class="hljs-meta"># falloc和trunc则需要文件系统和内核支持</span>
+<span class="hljs-meta"># NTFS建议使用falloc, EXT3/4建议trunc, MAC 下需要注释此项</span>
+<span class="hljs-meta">#file-allocation=falloc</span>
+
+<span class="hljs-meta">## 下载连接相关 ##</span>
+
+<span class="hljs-meta"># 最大同时下载任务数, 运行时可修改, 默认:5</span>
+<span class="hljs-meta">#max-concurrent-downloads=5</span>
+<span class="hljs-meta"># 同一服务器连接数, 添加时可指定, 默认:1</span>
+max-connection-per-server=<span class="hljs-number">15</span>
+<span class="hljs-meta"># 整体下载速度限制, 运行时可修改, 默认:0（不限制）</span>
+<span class="hljs-meta">#max-overall-download-limit=0</span>
+<span class="hljs-meta"># 单个任务下载速度限制, 默认:0（不限制）</span>
+<span class="hljs-meta">#max-download-limit=0</span>
+<span class="hljs-meta"># 整体上传速度限制, 运行时可修改, 默认:0（不限制）</span>
+<span class="hljs-meta">#max-overall-upload-limit=0</span>
+<span class="hljs-meta"># 单个任务上传速度限制, 默认:0（不限制）</span>
+<span class="hljs-meta">#max-upload-limit=0</span>
+<span class="hljs-meta"># 禁用IPv6, 默认:false</span>
+disable-ipv6=<span class="hljs-literal">true</span>
+
+<span class="hljs-meta"># 最小文件分片大小, 添加时可指定, 取值范围1M -1024M, 默认:20M</span>
+<span class="hljs-meta"># 假定size=10M, 文件为20MiB 则使用两个来源下载; 文件为15MiB 则使用一个来源下载</span>
+min-split-size=<span class="hljs-number">10</span>M
+<span class="hljs-meta"># 单个任务最大线程数, 添加时可指定, 默认:5</span>
+split=<span class="hljs-number">10</span>
+
+<span class="hljs-meta">## 进度保存相关 ##</span>
+
+<span class="hljs-meta"># 从会话文件中读取下载任务</span>
+input-file=/etc/aria2/aria2.session
+<span class="hljs-meta"># 在Aria2退出时保存错误的、未完成的下载任务到会话文件</span>
+save-session=/etc/aria2/aria2.session
+<span class="hljs-meta"># 定时保存会话, 0为退出时才保存, 需1.16.1以上版本, 默认:0</span>
+save-session-interval=<span class="hljs-number">60</span>
+
+<span class="hljs-meta">## RPC相关设置 ##</span>
+
+<span class="hljs-meta"># 启用RPC, 默认:false</span>
+enable-rpc=<span class="hljs-literal">true</span>
+<span class="hljs-meta"># 允许所有来源, 默认:false</span>
+rpc-allow-origin-all=<span class="hljs-literal">true</span>
+<span class="hljs-meta"># 允许外部访问, 默认:false</span>
+rpc-listen-all=<span class="hljs-literal">true</span>
+<span class="hljs-meta"># RPC端口, 仅当默认端口被占用时修改</span>
+<span class="hljs-meta"># rpc-listen-port=6800</span>
+<span class="hljs-meta"># 设置的RPC授权令牌, v1.18.4新增功能, 取代 --rpc-user 和 --rpc-passwd 选项</span>
+<span class="hljs-meta">#rpc-secret=&lt;TOKEN&gt;</span>
+
+<span class="hljs-meta">## BT/PT下载相关 ##</span>
+
+<span class="hljs-meta"># 当下载的是一个种子(以.torrent结尾)时, 自动开始BT任务, 默认:true</span>
+<span class="hljs-meta">#follow-torrent=true</span>
+<span class="hljs-meta"># 客户端伪装, PT需要</span>
+peer-id-prefix=-TR2770-
+user-agent=Transmission/<span class="hljs-number">2.77</span>
+<span class="hljs-meta"># 强制保存会话, 即使任务已经完成, 默认:false</span>
+<span class="hljs-meta"># 较新的版本开启后会在任务完成后依然保留.aria2文件</span>
+<span class="hljs-meta">#force-save=false</span>
+<span class="hljs-meta"># 继续之前的BT任务时, 无需再次校验, 默认:false</span>
+bt-seed-unverified=<span class="hljs-literal">true</span>
+<span class="hljs-meta"># 保存磁力链接元数据为种子文件(.torrent文件), 默认:false</span>
+bt-save-metadata=<span class="hljs-literal">true</span>
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="启动"></a><a href="#启动" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>启动</h2>
+<pre><code class="hljs"><span class="hljs-comment"># 没有什么提示标识启动成功</span>
+aria2c <span class="hljs-attribute">--conf-path</span>=/etc/aria2/aria2.conf -D
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="开机启动"></a><a href="#开机启动" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>开机启动</h2>
+<pre><code class="hljs">sudo vim /etc/init.d/aria2c
+<span class="hljs-comment"># 添加如下内容</span>
+<span class="hljs-meta">#!/bin/sh</span>
+<span class="hljs-comment">### BEGIN INIT INFO</span>
+<span class="hljs-comment"># Provides: aria2c</span>
+<span class="hljs-comment"># Required-Start:    $network $local_fs $remote_fs</span>
+<span class="hljs-comment"># Required-Stop:     $network $local_fs $remote_fs</span>
+<span class="hljs-comment"># Default-Start:     2 3 4 5</span>
+<span class="hljs-comment"># Default-Stop:      0 1 6</span>
+<span class="hljs-comment"># Short-Description: aria2c RPC init script.</span>
+<span class="hljs-comment"># Description: Starts and stops aria2 RPC services.</span>
+<span class="hljs-comment">### END INIT INFO</span>
+
+USER=root
+RETVAL=0
+
+<span class="hljs-keyword">case</span> <span class="hljs-string">"<span class="hljs-variable">$1</span>"</span> <span class="hljs-keyword">in</span>  
+    start)  
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Starting service Aria2..."</span>
+        aria2c --conf-path=/etc/aria2/aria2.conf -D  
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Start service done."</span>  
+    ;;  
+    stop)  
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Stoping service Aria2..."</span>  
+        killall aria2c   
+        <span class="hljs-built_in">echo</span> <span class="hljs-string">"Stop service done."</span>  
+    ;;  
+<span class="hljs-keyword">esac</span>  
+
+<span class="hljs-built_in">exit</span> <span class="hljs-variable">$RETVAL</span>
+
+<span class="hljs-comment"># 执行</span>
+sudo chmod +x /etc/init.d/aria2c
+sudo apt-get -y install chkconfig
+sudo chkconfig --add aria2c
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="安装web服务"></a><a href="#安装web服务" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装web服务</h2>
+<h3><a class="anchor" aria-hidden="true" id="安装nginx"></a><a href="#安装nginx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>安装Nginx</h3>
+<p>Nginx 是一个非常轻量级的HTTP服务器，非常适合放在树莓派上作为 Aria2 的 Web 管理。</p>
+<pre><code class="hljs">sudo apt-<span class="hljs-builtin-name">get</span> -y install nginx
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="下载第三方web管理程序"></a><a href="#下载第三方web管理程序" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>下载第三方web管理程序</h3>
+<pre><code class="hljs">git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/ziahamza/webui-aria2.git /var/www/html
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="启动nginx"></a><a href="#启动nginx" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>启动nginx</h3>
+<pre><code class="hljs">/etc/init.d/nginx <span class="hljs-literal">start</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="添加开机自启-编辑-etc-rclocal-添加一行"></a><a href="#添加开机自启-编辑-etc-rclocal-添加一行" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>添加开机自启，编辑 /etc/rc.local，添加一行：</h3>
+<pre><code class="hljs">/etc/init.d/nginx <span class="hljs-literal">start</span>
+</code></pre>
+<p>在浏览器中输入IP即可访问到aria2了</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/raspberrypi/nextcloud"><span class="arrow-prev">← </span><span class="function-name-prevnext">树莓派架设私有网盘--NextCloud</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#安装">安装</a></li><li><a href="#配置">配置</a><ul class="toc-headings"><li><a href="#创建文件夹">创建文件夹</a></li><li><a href="#创建session和配置文件">创建session和配置文件</a></li><li><a href="#编辑-etc-aria2-aria2conf">编辑/etc/aria2/aria2.conf</a></li></ul></li><li><a href="#启动">启动</a></li><li><a href="#开机启动">开机启动</a></li><li><a href="#安装web服务">安装web服务</a><ul class="toc-headings"><li><a href="#安装nginx">安装Nginx</a></li><li><a href="#下载第三方web管理程序">下载第三方web管理程序</a></li><li><a href="#启动nginx">启动nginx</a></li><li><a href="#添加开机自启-编辑-etc-rclocal-添加一行">添加开机自启，编辑 /etc/rc.local，添加一行：</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2019 DarkGod</section></footer></div></body></html>

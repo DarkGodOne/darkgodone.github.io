@@ -16,7 +16,7 @@
 }
 
 img {
-  max-height: 300px;
+  max-height: 500px;
 }
 
 article p img {
@@ -28,7 +28,7 @@ a {
     text-decoration: none;
 }
 
-a:hover {
+a:hover{
     color: #ff0000;
     text-decoration: none;
 }

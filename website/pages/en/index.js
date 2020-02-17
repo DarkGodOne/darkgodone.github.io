@@ -64,8 +64,7 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <ProjectTitle siteConfig={siteConfig} />
           <PromoSection>
-            <Button href="https://github.darkgod.online/kafka">中文Kafka</Button>
-            <Button href="https://github.darkgod.online/dep">中文dep</Button>
+            <Button href="https://github.com/DarkGodOne/zkConfigStation">zookeeper管理工具</Button>
             <Button href={docUrl('openwrt/domestic.html')}>知识宝库</Button>
           </PromoSection>
         </div>

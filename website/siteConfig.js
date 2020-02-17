@@ -39,7 +39,7 @@ const siteConfig = {
 
   // For no header links in the top nav bar -> headerLinks: [],
   headerLinks: [
-    {href: 'https://github.darkgod.online/zkConfigStation', label: 'zookeeper管理工具'},
+    {href: 'https://github.com/DarkGodOne/zkConfigStation', label: 'zookeeper管理工具'},
     {doc: 'openwrt/domestic', label: '知识宝库'},
     {blog: true, label: 'Blog'},
     { search: true }

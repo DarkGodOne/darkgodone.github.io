@@ -1,0 +1,192 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Emscripten编译ffmpeg+libx264 · DarkGod’ Blog</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## 第一步：搭建Emscripten编译环境（建议使用linux环境）"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Emscripten编译ffmpeg+libx264 · DarkGod’ Blog"/><meta property="og:type" content="website"/><meta property="og:url" content="https://github.darkgod.online//"/><meta property="og:description" content="## 第一步：搭建Emscripten编译环境（建议使用linux环境）"/><meta property="og:image" content="https://github.darkgod.online/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://github.darkgod.online/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/img/favicon.svg"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><link rel="alternate" type="application/atom+xml" href="https://github.darkgod.online/blog/atom.xml" title="DarkGod’ Blog Blog ATOM Feed"/><link rel="alternate" type="application/rss+xml" href="https://github.darkgod.online/blog/feed.xml" title="DarkGod’ Blog Blog RSS Feed"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/js/scrollSpy.js"></script><link rel="stylesheet" href="/css/main.css"/><script src="/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/"><img class="logo" src="/img/favicon.svg" alt="DarkGod’ Blog"/><h2 class="headerTitleWithLogo">DarkGod’ Blog</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class=""><a href="https://github.com/DarkGodOne/zkConfigStation" target="_self">zookeeper管理工具</a></li><li class="siteNavGroupActive"><a href="/docs/openwrt/domestic" target="_self">知识宝库</a></li><li class=""><a href="/blog/" target="_self">Blog</a></li><li class=""><a target="_self"></a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Emscripten</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Openwrt</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/openwrt/domestic">Openwrt 国内源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/local">Openwrt 本地源配置</a></li><li class="navListItem"><a class="navItem" href="/docs/openwrt/extend">Openwrt 扩展根分区</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Git</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/git/ssh">Git 配置SSH方式</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">VPN</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/vpn/vpn">Centos7上使用StrongSwan部署IPSecVPN</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/zerotier">简单好用的点对点私网穿越工具：Zerotier-one</a></li><li class="navListItem"><a class="navItem" href="/docs/vpn/frp">一款很好用的内网穿透工具--FRP</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">WebServer</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/webserver/webcloud">Centos7上搭建wordpress+lighttpd+php+sqlite轻量级博客</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">RaspberryPi</h3><ul class=""><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/nextcloud">树莓派架设私有网盘--NextCloud</a></li><li class="navListItem"><a class="navItem" href="/docs/raspberrypi/aria2">全能下载神器--aria2</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Emscripten</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/docs/emscripten/ffmpeg">Emscripten编译ffmpeg+libx264</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 class="postHeaderTitle">Emscripten编译ffmpeg+libx264</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="第一步-搭建emscripten编译环境-建议使用linux环境"></a><a href="#第一步-搭建emscripten编译环境-建议使用linux环境" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第一步：搭建Emscripten编译环境（建议使用linux环境）</h2>
+<h3><a class="anchor" aria-hidden="true" id="首先安装依赖包"></a><a href="#首先安装依赖包" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>首先安装依赖包</h3>
+<pre><code class="hljs"><span class="hljs-meta"># Install Python</span>
+sudo apt-<span class="hljs-keyword">get</span> install python3
+
+<span class="hljs-meta"># Install CMake (optional, only needed for tests and building Binaryen)</span>
+sudo apt-<span class="hljs-keyword">get</span> install cmake
+
+<span class="hljs-meta"># Install Java (optional, only needed for Closure Compiler minification)</span>
+sudo apt-<span class="hljs-keyword">get</span> install <span class="hljs-keyword">default</span>-jre
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="然后获取emsdk"></a><a href="#然后获取emsdk" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>然后获取emsdk</h3>
+<pre><code class="hljs">下载地址：
+git <span class="hljs-keyword">clone</span> <span class="hljs-title">https</span>://github.com/emscripten-core/emsdk.git
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="配置emsdk"></a><a href="#配置emsdk" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>配置emsdk</h3>
+<pre><code class="hljs"><span class="hljs-comment"># 进入emsdk目录</span>
+<span class="hljs-keyword">cd</span> emsdk
+
+<span class="hljs-comment"># 下载依赖工具.</span>
+<span class="hljs-string">./emsdk</span> install latest
+
+<span class="hljs-comment"># 激活sdk（感觉就是生成一下环境变量）</span>
+<span class="hljs-string">./emsdk</span> activate latest
+
+<span class="hljs-comment"># 激活环境变量，使当前用户可以通过终端使用</span>
+source <span class="hljs-string">./emsdk_env.sh</span>
+
+<span class="hljs-comment"># 如果需要打开终端自动加载环境变量</span>
+vim ~<span class="hljs-string">/.bashrc</span>
+在最后一行添加
+source path_to_emsdk/emsdk_env.sh
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="验证一下"></a><a href="#验证一下" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>验证一下</h3>
+<pre><code class="hljs"><span class="hljs-comment"># 编辑test.c文件</span>
+<span class="hljs-string">vim</span> <span class="hljs-string">test.c</span>
+
+<span class="hljs-comment"># 输入</span>
+<span class="hljs-comment">#include &lt;stdio.h&gt;</span>
+
+<span class="hljs-string">int</span> <span class="hljs-string">main()</span> <span class="hljs-string">{</span>
+  <span class="hljs-string">printf("hello,</span> <span class="hljs-string">world!\n");</span>
+  <span class="hljs-string">return</span> <span class="hljs-number">0</span><span class="hljs-string">;</span>
+<span class="hljs-string">}</span>
+
+<span class="hljs-comment"># 执行编译</span>
+<span class="hljs-string">emcc</span> <span class="hljs-string">test.c</span> <span class="hljs-bullet">-o</span> <span class="hljs-string">test.html</span>
+
+<span class="hljs-comment"># 生成三个文件</span>
+<span class="hljs-string">test.html</span> <span class="hljs-meta">---</span> <span class="hljs-string">测试页面</span>
+<span class="hljs-string">test.js</span> <span class="hljs-meta">---</span> <span class="hljs-string">调用js</span>
+<span class="hljs-string">test.wasm</span> <span class="hljs-meta">---</span> <span class="hljs-string">二进制库</span>
+
+<span class="hljs-comment"># 执行</span>
+<span class="hljs-comment">## 方法一：</span>
+<span class="hljs-string">使用npm的static-server</span>
+<span class="hljs-string">npm</span> <span class="hljs-string">install</span> <span class="hljs-bullet">-g</span> <span class="hljs-string">static-server</span>
+<span class="hljs-string">然后通过web浏览器访问http://127.0.0.1:9080/test.html</span>
+
+<span class="hljs-comment">## 方法二：</span>
+<span class="hljs-string">使用node直接执行</span>
+<span class="hljs-string">node</span> <span class="hljs-string">test.js</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="方法一"></a><a href="#方法一" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方法一</h3>
+<p><img src="/docs/assets/emscripten/test1.png" alt="test1"></p>
+<h3><a class="anchor" aria-hidden="true" id="方法二"></a><a href="#方法二" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>方法二</h3>
+<p><img src="/docs/assets/emscripten/test2.png" alt="test2"></p>
+<h2><a class="anchor" aria-hidden="true" id="第二步-编译libx264"></a><a href="#第二步-编译libx264" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第二步，编译libx264</h2>
+<h3><a class="anchor" aria-hidden="true" id="下载源码"></a><a href="#下载源码" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>下载源码</h3>
+<pre><code class="hljs">下载地址：
+https:<span class="hljs-regexp">//</span>code.videolan.org<span class="hljs-regexp">/videolan/</span>x264<span class="hljs-regexp">/-/</span>archive<span class="hljs-regexp">/master/</span>x264-master.tar.bz2
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="编译"></a><a href="#编译" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>编译</h3>
+<pre><code class="hljs"><span class="hljs-comment"># 解压</span>
+tar xvjf x264-master.tar.bz2
+
+<span class="hljs-comment"># 进入目录</span>
+<span class="hljs-keyword">cd</span> x264-master
+
+<span class="hljs-comment"># 配置Makefile</span>
+emconfigure <span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=</span>~<span class="hljs-string">/libs/</span>  <span class="hljs-params">--enable-static</span> <span class="hljs-params">--disable-asm</span> \
+<span class="hljs-params">--host=i686-gnu</span> <span class="hljs-params">--disable-cli</span> <span class="hljs-params">--extra-cflags=</span><span class="hljs-string">"-s USE_PTHREADS=1"</span>
+
+<span class="hljs-comment"># 编译</span>
+emake make
+
+<span class="hljs-comment"># 安装，会安装到--prefix指定的目录</span>
+emmake install
+
+<span class="hljs-comment"># 在--prefix目录下会有include和lib目录</span>
+include<span class="hljs-params">-----</span> 头文件目录
+    |<span class="hljs-params">---x264</span>.h
+    |<span class="hljs-params">---x264_config</span>.h
+lib<span class="hljs-params">---------</span>库目录
+    |<span class="hljs-params">---libx264</span>.a 
+    |<span class="hljs-params">---pkgconfig</span> 
+
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="第三步-编译ffmpeg"></a><a href="#第三步-编译ffmpeg" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第三步，编译ffmpeg</h2>
+<h3><a class="anchor" aria-hidden="true" id="下载源码-1"></a><a href="#下载源码-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>下载源码</h3>
+<pre><code class="hljs">下载地址：
+<span class="hljs-symbol">https:</span>//ffmpeg<span class="hljs-meta">.org</span>/releases/ffmpeg-snapshot.tar.bz2
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="编译-1"></a><a href="#编译-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>编译</h3>
+<pre><code class="hljs"><span class="hljs-comment"># 解压</span>
+tar xvjf ffmpeg-snapshot.tar.bz2
+
+<span class="hljs-comment"># 进入目录</span>
+<span class="hljs-keyword">cd</span> ffmpeg-snapshot
+
+<span class="hljs-comment"># 配置Makefile</span>
+emconfigure <span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=/home/gxk527/libs</span> <span class="hljs-params">--enable-gpl</span> \
+<span class="hljs-params">--enable-libx264</span> <span class="hljs-params">--enable-cross-compile</span> <span class="hljs-params">--target-os=none</span> <span class="hljs-params">--arch=x86_64</span> \
+<span class="hljs-params">--cpu=generic</span> <span class="hljs-params">--disable-ffplay</span> <span class="hljs-params">--disable-ffprobe</span> <span class="hljs-params">--disable-asm</span> <span class="hljs-params">--disable-doc</span> \
+<span class="hljs-params">--disable-devices</span> <span class="hljs-params">--disable-pthreads</span> <span class="hljs-params">--disable-w32threads</span> <span class="hljs-params">--disable-network</span> \
+<span class="hljs-params">--disable-hwaccels</span> <span class="hljs-params">--disable-parsers</span> <span class="hljs-params">--disable-bsfs</span> <span class="hljs-params">--disable-debug</span> \
+<span class="hljs-params">--disable-protocols</span>  <span class="hljs-params">--disable-indevs</span> <span class="hljs-params">--disable-outdevs</span> <span class="hljs-params">--enable-protocol=file</span> \
+<span class="hljs-params">--cc=</span><span class="hljs-string">"emcc"</span> <span class="hljs-params">--cxx=</span><span class="hljs-string">"em++"</span> <span class="hljs-params">--ar=</span><span class="hljs-string">"emar"</span> <span class="hljs-params">--ranlib=</span><span class="hljs-string">"emranlib"</span> \
+<span class="hljs-params">--extra-cflags=</span><span class="hljs-string">"-I/home/gxk527/libs/include"</span> \
+<span class="hljs-params">--extra-cxxflags=</span><span class="hljs-string">"-I/home/gxk527/libs/include"</span> \
+<span class="hljs-params">--extra-ldflags=</span><span class="hljs-string">"-L/home/gxk527/libs/lib -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=2"</span>
+
+<span class="hljs-comment"># 编译</span>
+emake make
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="编译过程中遇到的问题"></a><a href="#编译过程中遇到的问题" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>编译过程中遇到的问题</h3>
+<h4><a class="anchor" aria-hidden="true" id="问题一-error-libx264-not-found"></a><a href="#问题一-error-libx264-not-found" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>问题一：ERROR: libx264 not found</h4>
+<p>该问题是由于ffmpeg无法找到libx264库，网上很多问答都只说添加--extra-cflags就可以了，但是实际操作的时候仍然会报错；
+其实还需要增加--extra-cxxflags和--extra-ldflags，即：
+--extra-cflags和--extra-cxxflags使用-I指定头文件目录
+--extra-ldflags使用-L指定库文件目录</p>
+<h4><a class="anchor" aria-hidden="true" id="问题二-wasm-ld-error-libavdevice-libavdevicea-archive-has-no-index-run-ranlib-to-add-one"></a><a href="#问题二-wasm-ld-error-libavdevice-libavdevicea-archive-has-no-index-run-ranlib-to-add-one" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>问题二：wasm-ld: error: libavdevice/libavdevice.a: archive has no index; run ranlib to add one</h4>
+<p>该问题是由于没有指定ranlib工具的问题，需要在配置的时候添加--ranlib=&quot;emranlib&quot;</p>
+<h4><a class="anchor" aria-hidden="true" id="注意"></a><a href="#注意" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>注意</h4>
+<p>configure的时候出问题一定要记得看ffbuild/config.log，不要只看终端返回内容，那个很模糊，config.log里面会写的很细。</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/raspberrypi/aria2"><span class="arrow-prev">← </span><span>全能下载神器--aria2</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#第一步-搭建emscripten编译环境-建议使用linux环境">第一步：搭建Emscripten编译环境（建议使用linux环境）</a><ul class="toc-headings"><li><a href="#首先安装依赖包">首先安装依赖包</a></li><li><a href="#然后获取emsdk">然后获取emsdk</a></li><li><a href="#配置emsdk">配置emsdk</a></li><li><a href="#验证一下">验证一下</a></li><li><a href="#方法一">方法一</a></li><li><a href="#方法二">方法二</a></li></ul></li><li><a href="#第二步-编译libx264">第二步，编译libx264</a><ul class="toc-headings"><li><a href="#下载源码">下载源码</a></li><li><a href="#编译">编译</a></li></ul></li><li><a href="#第三步-编译ffmpeg">第三步，编译ffmpeg</a><ul class="toc-headings"><li><a href="#下载源码-1">下载源码</a></li><li><a href="#编译-1">编译</a></li><li><a href="#编译过程中遇到的问题">编译过程中遇到的问题</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 DarkGod</section></footer></div></body></html>

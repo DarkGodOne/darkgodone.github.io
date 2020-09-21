@@ -65,9 +65,10 @@ test.js --- 调用js
 test.wasm --- 二进制库
 
 # 执行
-## 方法一：
-使用npm的static-server
+## 方法一：使用npm的static-server
 npm install -g static-server
+static-server
+
 然后通过web浏览器访问http://127.0.0.1:9080/test.html
 
 ## 方法二：

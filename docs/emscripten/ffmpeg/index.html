@@ -132,11 +132,11 @@ https:<span class="hljs-regexp">//</span>code.videolan.org<span class="hljs-rege
 tar xvjf x264-master.tar.bz2
 
 <span class="hljs-comment"># 进入目录</span>
-<span class="hljs-keyword">cd</span> x264-master
+cd x264-master
 
 <span class="hljs-comment"># 配置Makefile</span>
-emconfigure <span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=</span>~<span class="hljs-string">/libs/</span>  <span class="hljs-params">--enable-static</span> <span class="hljs-params">--disable-asm</span> \
-<span class="hljs-params">--host=i686-gnu</span> <span class="hljs-params">--disable-cli</span> <span class="hljs-params">--extra-cflags=</span><span class="hljs-string">"-s USE_PTHREADS=1"</span>
+emconfigure ./configure --prefix=<span class="hljs-regexp">/home/test</span><span class="hljs-regexp">/libs/</span>  --enable-static --disable-<span class="hljs-keyword">asm</span> \
+--host=i686-gnu --disable-cli --extra-cflags=<span class="hljs-string">"-s USE_PTHREADS=1"</span>
 
 <span class="hljs-comment"># 编译</span>
 emake make
@@ -145,12 +145,12 @@ emake make
 emmake install
 
 <span class="hljs-comment"># 在--prefix目录下会有include和lib目录</span>
-include<span class="hljs-params">-----</span> 头文件目录
-    |<span class="hljs-params">---x264</span>.h
-    |<span class="hljs-params">---x264_config</span>.h
-lib<span class="hljs-params">---------</span>库目录
-    |<span class="hljs-params">---libx264</span>.a 
-    |<span class="hljs-params">---pkgconfig</span> 
+<span class="hljs-keyword">include</span>----- 头文件目录
+    |---x264.h
+    |---x264_config.h
+<span class="hljs-class"><span class="hljs-keyword">lib</span>---------库目录</span>
+    |---libx264.a 
+    |---pkgconfig 
 
 </code></pre>
 <h2><a class="anchor" aria-hidden="true" id="第三步-编译ffmpeg"></a><a href="#第三步-编译ffmpeg" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>第三步，编译ffmpeg</h2>
@@ -166,16 +166,16 @@ tar xvjf ffmpeg-snapshot.tar.bz2
 <span class="hljs-keyword">cd</span> ffmpeg-snapshot
 
 <span class="hljs-comment"># 配置Makefile</span>
-emconfigure <span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=/home/gxk527/libs</span> <span class="hljs-params">--enable-gpl</span> \
+emconfigure <span class="hljs-string">./configure</span> <span class="hljs-params">--prefix=/home/test/libs</span> <span class="hljs-params">--enable-gpl</span> \
 <span class="hljs-params">--enable-libx264</span> <span class="hljs-params">--enable-cross-compile</span> <span class="hljs-params">--target-os=none</span> <span class="hljs-params">--arch=x86_64</span> \
 <span class="hljs-params">--cpu=generic</span> <span class="hljs-params">--disable-ffplay</span> <span class="hljs-params">--disable-ffprobe</span> <span class="hljs-params">--disable-asm</span> <span class="hljs-params">--disable-doc</span> \
 <span class="hljs-params">--disable-devices</span> <span class="hljs-params">--disable-pthreads</span> <span class="hljs-params">--disable-w32threads</span> <span class="hljs-params">--disable-network</span> \
 <span class="hljs-params">--disable-hwaccels</span> <span class="hljs-params">--disable-parsers</span> <span class="hljs-params">--disable-bsfs</span> <span class="hljs-params">--disable-debug</span> \
 <span class="hljs-params">--disable-protocols</span>  <span class="hljs-params">--disable-indevs</span> <span class="hljs-params">--disable-outdevs</span> <span class="hljs-params">--enable-protocol=file</span> \
 <span class="hljs-params">--cc=</span><span class="hljs-string">"emcc"</span> <span class="hljs-params">--cxx=</span><span class="hljs-string">"em++"</span> <span class="hljs-params">--ar=</span><span class="hljs-string">"emar"</span> <span class="hljs-params">--ranlib=</span><span class="hljs-string">"emranlib"</span> \
-<span class="hljs-params">--extra-cflags=</span><span class="hljs-string">"-I/home/gxk527/libs/include"</span> \
-<span class="hljs-params">--extra-cxxflags=</span><span class="hljs-string">"-I/home/gxk527/libs/include"</span> \
-<span class="hljs-params">--extra-ldflags=</span><span class="hljs-string">"-L/home/gxk527/libs/lib -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=2"</span>
+<span class="hljs-params">--extra-cflags=</span><span class="hljs-string">"-I/home/test/libs/include"</span> \
+<span class="hljs-params">--extra-cxxflags=</span><span class="hljs-string">"-I/home/test/libs/include"</span> \
+<span class="hljs-params">--extra-ldflags=</span><span class="hljs-string">"-L/home/test/libs/lib -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=2"</span>
 
 <span class="hljs-comment"># 编译</span>
 emake make
@@ -188,6 +188,30 @@ emake make
 --extra-ldflags使用-L指定库文件目录</p>
 <h4><a class="anchor" aria-hidden="true" id="问题二-wasm-ld-error-libavdevice-libavdevicea-archive-has-no-index-run-ranlib-to-add-one"></a><a href="#问题二-wasm-ld-error-libavdevice-libavdevicea-archive-has-no-index-run-ranlib-to-add-one" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>问题二：wasm-ld: error: libavdevice/libavdevice.a: archive has no index; run ranlib to add one</h4>
 <p>该问题是由于没有指定ranlib工具的问题，需要在配置的时候添加--ranlib=&quot;emranlib&quot;</p>
+<h4><a class="anchor" aria-hidden="true" id="问题三-strip-ffmpeg_g-file-format-not-recognized"></a><a href="#问题三-strip-ffmpeg_g-file-format-not-recognized" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>问题三：strip: ffmpeg_g: file format not recognized</h4>
+<p>在config.log里面会看到</p>
+<pre><code class="hljs"><span class="hljs-string">emcc:</span> <span class="hljs-string">warning:</span> ignoring unsupported linker <span class="hljs-string">flag:</span>
+`-rpath-link=<span class="hljs-string">libpostproc:</span><span class="hljs-string">libswresample:</span><span class="hljs-string">libswscale:</span><span class="hljs-string">libavfilter:</span><span class="hljs-string">libavdevice:</span><span class="hljs-string">libavformat:</span><span class="hljs-string">libavcodec:</span><span class="hljs-string">libavutil:</span>libavresample` [-Wlinkflags]
+</code></pre>
+<p>原因是emcc不支持-rpath参数，所以需要在makefile里面把这部分注释掉</p>
+<pre><code class="hljs"><span class="hljs-comment"># 编辑Makefile，大概在99行</span>
+<span class="hljs-variable">$(PROGS)</span>: %<span class="hljs-variable">$(PROGSSUF)</span><span class="hljs-variable">$(EXESUF)</span>: %<span class="hljs-variable">$(PROGSSUF)</span>_g<span class="hljs-variable">$(EXESUF)</span>
+<span class="hljs-keyword">ifeq</span> (<span class="hljs-variable">$(STRIPTYPE)</span>,direct)
+  <span class="hljs-variable">$(STRIP)</span> -o <span class="hljs-variable">$@</span> <span class="hljs-variable">$&lt;</span>
+<span class="hljs-keyword">else</span>
+  <span class="hljs-variable">$(CP)</span> <span class="hljs-variable">$&lt;</span> <span class="hljs-variable">$@</span>
+  <span class="hljs-variable">$(STRIP)</span> <span class="hljs-variable">$@</span>
+<span class="hljs-keyword">endif</span>
+
+<span class="hljs-comment"># 最后就是把ffmpeg_g拷贝到ffmpeg，其实不改也没关系，直接用ffmpeg_g就可以了，修改为如下：</span>
+<span class="hljs-variable">$(PROGS)</span>: %<span class="hljs-variable">$(PROGSSUF)</span><span class="hljs-variable">$(EXESUF)</span>: %<span class="hljs-variable">$(PROGSSUF)</span>_g<span class="hljs-variable">$(EXESUF)</span>
+<span class="hljs-comment">#ifeq ($(STRIPTYPE),direct)</span>
+<span class="hljs-comment">#  $(STRIP) -o $@ $&lt;</span>
+<span class="hljs-comment">#else</span>
+  <span class="hljs-variable">$(CP)</span> <span class="hljs-variable">$&lt;</span> <span class="hljs-variable">$@</span>
+<span class="hljs-comment">#  $(STRIP) $@</span>
+<span class="hljs-comment">#endif</span>
+</code></pre>
 <h4><a class="anchor" aria-hidden="true" id="注意"></a><a href="#注意" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>注意</h4>
-<p>configure的时候出问题一定要记得看ffbuild/config.log，不要只看终端返回内容，那个很模糊，config.log里面会写的很细。</p>
+<p>出问题一定要记得看ffbuild/config.log，不要只看终端返回内容，写的很模糊，config.log里面会写的很细。</p>
 </span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/docs/raspberrypi/aria2"><span class="arrow-prev">← </span><span>全能下载神器--aria2</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#第一步-搭建emscripten编译环境-建议使用linux环境">第一步：搭建Emscripten编译环境（建议使用linux环境）</a><ul class="toc-headings"><li><a href="#首先安装依赖包">首先安装依赖包</a></li><li><a href="#然后获取emsdk">然后获取emsdk</a></li><li><a href="#配置emsdk">配置emsdk</a></li><li><a href="#验证一下">验证一下</a></li><li><a href="#方法一">方法一</a></li><li><a href="#方法二">方法二</a></li></ul></li><li><a href="#第二步-编译libx264">第二步，编译libx264</a><ul class="toc-headings"><li><a href="#下载源码">下载源码</a></li><li><a href="#编译">编译</a></li></ul></li><li><a href="#第三步-编译ffmpeg">第三步，编译ffmpeg</a><ul class="toc-headings"><li><a href="#下载源码-1">下载源码</a></li><li><a href="#编译-1">编译</a></li><li><a href="#编译过程中遇到的问题">编译过程中遇到的问题</a></li></ul></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/" class="nav-home"><img src="/img/favicon.svg" alt="DarkGod’ Blog" width="66" height="58"/></a><div><h5>Docs</h5><a href="/docs/en/openwrt/domestic.html">Openwrt 国内源配置</a><a href="/docs/en/git/ssh.html">Git 配置SSH方式</a><a href="/docs/en/vpn/vpn.html">Centos7上使用StrongSwan部署IPSecVPN</a></div><div><h5>Community</h5><a>欢迎~欢迎~热烈欢迎~~</a></div><div><h5>More</h5><a href="/blog">Blog</a><a href="https://github.com/">GitHub</a><a class="github-button" data-icon="octicon-star" data-count-href="/facebook/docusaurus/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 DarkGod</section></footer></div></body></html>

@@ -98,7 +98,7 @@ tar xvjf x264-master.tar.bz2
 cd x264-master
 
 # 配置Makefile
-emconfigure ./configure --prefix=~/libs/  --enable-static --disable-asm \
+emconfigure ./configure --prefix=/home/test/libs/  --enable-static --disable-asm \
 --host=i686-gnu --disable-cli --extra-cflags="-s USE_PTHREADS=1"
 
 # 编译
@@ -133,16 +133,16 @@ tar xvjf ffmpeg-snapshot.tar.bz2
 cd ffmpeg-snapshot
 
 # 配置Makefile
-emconfigure ./configure --prefix=/home/gxk527/libs --enable-gpl \
+emconfigure ./configure --prefix=/home/test/libs --enable-gpl \
 --enable-libx264 --enable-cross-compile --target-os=none --arch=x86_64 \
 --cpu=generic --disable-ffplay --disable-ffprobe --disable-asm --disable-doc \
 --disable-devices --disable-pthreads --disable-w32threads --disable-network \
 --disable-hwaccels --disable-parsers --disable-bsfs --disable-debug \
 --disable-protocols  --disable-indevs --disable-outdevs --enable-protocol=file \
 --cc="emcc" --cxx="em++" --ar="emar" --ranlib="emranlib" \
---extra-cflags="-I/home/gxk527/libs/include" \
---extra-cxxflags="-I/home/gxk527/libs/include" \
---extra-ldflags="-L/home/gxk527/libs/lib -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=2"
+--extra-cflags="-I/home/test/libs/include" \
+--extra-cxxflags="-I/home/test/libs/include" \
+--extra-ldflags="-L/home/test/libs/lib -s USE_PTHREADS=1 -s PTHREAD_POOL_SIZE=2"
 
 # 编译
 emake make
@@ -158,7 +158,32 @@ emake make
 #### 问题二：wasm-ld: error: libavdevice/libavdevice.a: archive has no index; run ranlib to add one
 该问题是由于没有指定ranlib工具的问题，需要在配置的时候添加--ranlib="emranlib"
 
+#### 问题三：strip: ffmpeg_g: file format not recognized
+在config.log里面会看到
+```
+emcc: warning: ignoring unsupported linker flag:
+`-rpath-link=libpostproc:libswresample:libswscale:libavfilter:libavdevice:libavformat:libavcodec:libavutil:libavresample` [-Wlinkflags]
+```
+原因是emcc不支持-rpath参数，所以需要在makefile里面把这部分注释掉
+```
+# 编辑Makefile，大概在99行
+$(PROGS): %$(PROGSSUF)$(EXESUF): %$(PROGSSUF)_g$(EXESUF)
+ifeq ($(STRIPTYPE),direct)
+  $(STRIP) -o $@ $<
+else
+  $(CP) $< $@
+  $(STRIP) $@
+endif
+
+# 最后就是把ffmpeg_g拷贝到ffmpeg，其实不改也没关系，直接用ffmpeg_g就可以了，修改为如下：
+$(PROGS): %$(PROGSSUF)$(EXESUF): %$(PROGSSUF)_g$(EXESUF)
+#ifeq ($(STRIPTYPE),direct)
+#  $(STRIP) -o $@ $<
+#else
+  $(CP) $< $@
+#  $(STRIP) $@
+#endif
+```
+
 #### 注意
-configure的时候出问题一定要记得看ffbuild/config.log，不要只看终端返回内容，那个很模糊，config.log里面会写的很细。
-
-
+出问题一定要记得看ffbuild/config.log，不要只看终端返回内容，写的很模糊，config.log里面会写的很细。
